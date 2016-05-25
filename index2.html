@@ -1,0 +1,164 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+	<meta charset="UTF-8" />
+    <title>Phaser - Making your first game, part 9</title>
+	<script type="text/javascript" src="phaser-2.4.7/build/phaser.min.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+
+function preload() {
+
+    game.load.image('sky', 'assets/sky.png');
+    game.load.image('ground', 'assets/platform.png');
+    game.load.image('star', 'assets/star.png');
+    game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+
+}
+
+var player1;
+var player2;
+
+var separater;
+var cursors;
+
+var drops;
+var score = 0;
+var scoreText;
+var bullets;
+
+function create() {
+
+    //  A simple background for our game
+    game.add.sprite(0, 0, 'sky');
+
+    //  The platforms group contains the ground and the 2 ledges we can jump on
+    separater = game.add.group();
+        
+    // Here we create the seperators.
+    var line1 = separater.create(game.world.width/3, 0, 'ground');
+    var line2 = separater.create(2*game.world.width/3, 0, 'ground');
+    
+    separater.scale.setTo(1, game.world.height);
+
+    
+    line1.anchor.setTo(0,0.5);
+    line2.anchor.setTo(0,0.5);
+    
+    line1.angle +=90;
+    line2.angle +=90;
+
+
+	line1.body.static = true;
+	line2.body.immovable = true;
+
+    //  This stops it from falling away when you jump on it
+    // separater.body.immovable = true;
+    
+    
+    player = game.add.group();
+    
+    // The player and its settings
+    player1 = game.add.sprite(32, game.world.height - 150, 'dude');
+    player2 = game.add.sprite(game.world.width - 32, game.world.height - 150, 'dude');
+
+
+    //  Our two animations, walking left and right.
+    player1.animations.add('left', [0, 1, 2, 3], 10, true);
+    player1.animations.add('right', [5, 6, 7, 8], 10, true);
+    
+    game.physics.arcade.enable(player1);
+    game.physics.arcade.enable(player2);
+
+
+
+    //  Finally some drops to collect
+    drops = game.add.group();
+
+    //  We will enable physics for any star that is created in this group
+    drops.enableBody = true;
+
+    var star = drops.create(1 * 70, 0, 'star');
+
+    //  The score Player 1
+    scoreText1 = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+    //  The score Player 2
+    scoreText2 = game.add.text(game.world.width - 160, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+
+    //  Our controls.
+    cursors = game.input.keyboard.createCursorKeys();
+    
+}
+
+function update() {
+
+    //  Collide the player and the drops with the platforms
+    game.physics.arcade.collide(player, separater);
+    //game.physics.arcade.collide(drops, separater);
+
+    //  Checks to see if the player overlaps with any of the drops, if he does call the collectStar function
+    //ame.physics.arcade.overlap(player, drops, collectStar, null, this);
+
+    //  Reset the players velocity (movement)
+    // player1.body.velocity.x = 0;
+
+    if (cursors.up.isDown)
+    {
+        //  Move to the left
+        player1.body.velocity.y = -150;
+
+        player1.animations.play('up');
+    }
+    else if (cursors.down.isDown)
+    {
+        //  Move to the right
+        player1.body.velocity.y = 150;
+
+        player1.animations.play('down');
+    }
+     else if (cursors.left.isDown)
+    {
+        //  Move to the right
+        player1.body.velocity.x = -150;
+
+        player1.animations.play('left');
+    }
+     else if (cursors.right.isDown)
+    {
+        //  Move to the right
+        player1.body.velocity.x = 150;
+
+        player1.animations.play('right');
+    }
+    else
+    {
+        //  Stand still
+        player1.animations.stop();
+
+        player1.frame = 4;
+    }
+}
+
+function playerHit (player, bullet) {
+    
+    //  Add and update the playlive
+    bullet.kill();
+    scoreText.text = 'Score: ' + score;
+
+}
+
+
+
+</script>
+
+</body>
+</html>

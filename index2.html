@@ -24,6 +24,8 @@ function preload() {
     game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
 
 }
+var line1 
+var line2
 
 var player1;
 var player2;
@@ -43,13 +45,14 @@ function create() {
 
     //  The platforms group contains the ground and the 2 ledges we can jump on
     separater = game.add.group();
-        
+	        
     // Here we create the seperators.
-    var line1 = separater.create(game.world.width/3, 0, 'ground');
-    var line2 = separater.create(2*game.world.width/3, 0, 'ground');
-    
+    line1 = separater.create(game.world.width/3, 0, 'ground');
+    line2 = separater.create(2*game.world.width/3, 0, 'ground');
+    	
     separater.scale.setTo(1, game.world.height);
-
+	game.physics.arcade.enable(line1);
+	line1.body.immovable = true;
     
     line1.anchor.setTo(0,0.5);
     line2.anchor.setTo(0,0.5);
@@ -86,8 +89,9 @@ function create() {
     player1.body.collideWorldBounds = true;
 	player2.body.collideWorldBounds = true;
 	
-
-    //  Finally some drops to collect
+	player1	.body.bounce.setTo(1, 1);
+	
+	//  Finally some drops to collect
     drops = game.add.group();
 
     //  We will enable physics for any star that is created in this group
@@ -112,10 +116,8 @@ function create() {
 }
 
 function update() {
-
-    //  Collide the player and the drops with the platforms
-    game.physics.arcade.collide(player, separater);
-    //game.physics.arcade.collide(drops, separater);
+	
+    game.physics.arcade.collide(player1, line1);
 
     //  Checks to see if the player overlaps with any of the drops, if he does call the collectStar function
     //ame.physics.arcade.overlap(player, drops, collectStar, null, this);

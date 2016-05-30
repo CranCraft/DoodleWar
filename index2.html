@@ -49,12 +49,16 @@ function create() {
     line1 = game.add.sprite(game.world.width/3, 0, 'ground');
     line2 = game.add.sprite(2*game.world.width/3, 0, 'ground');
     game.physics.enable(line1, Phaser.Physics.ARCADE);
+    game.physics.enable(line2, Phaser.Physics.ARCADE);
 
 	// line1.body.immovable = true;
 	
    // separater.scale.setTo(1, game.world.height);
 	game.physics.arcade.enable(line1);
 	line1.body.immovable = true;
+	
+	game.physics.arcade.enable(line2);
+	line2.body.immovable = true;
     
     //line1.anchor.setTo(0,0.5);
     //line2.anchor.setTo(0,0.5);
@@ -116,11 +120,12 @@ function create() {
 
     
 }
-
 function update() {
 	player1.body.velocity.x = 0;
-   player1.body.velocity.y = 0;
-    if (game.physics.arcade.collide(player1, line1,null))
+	player2.body.velocity.x = 0;
+    player1.body.velocity.y = 0;
+  	player2.body.velocity.y = 0;
+    if (game.physics.arcade.collide(player1, line1,null) || game.physics.arcade.collide(player2, line2,null))
     { 
 console.log("!!!");
     //  Checks to see if the player overlaps with any of the drops, if he does call the collectStar function

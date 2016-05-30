@@ -24,8 +24,8 @@ function preload() {
     game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
 
 }
-var line1 
-var line2
+var line1; 
+var line2;
 
 var player1;
 var player2;
@@ -44,21 +44,23 @@ function create() {
     game.add.sprite(0, 0, 'sky');
 
     //  The platforms group contains the ground and the 2 ledges we can jump on
-    separater = game.add.group();
 	        
     // Here we create the seperators.
-    line1 = separater.create(game.world.width/3, 0, 'ground');
-    line2 = separater.create(2*game.world.width/3, 0, 'ground');
-    	
-    separater.scale.setTo(1, game.world.height);
+    line1 = game.add.sprite(game.world.width/3, 0, 'ground');
+    line2 = game.add.sprite(2*game.world.width/3, 0, 'ground');
+    game.physics.enable(line1, Phaser.Physics.ARCADE);
+
+	// line1.body.immovable = true;
+	
+   // separater.scale.setTo(1, game.world.height);
 	game.physics.arcade.enable(line1);
 	line1.body.immovable = true;
     
-    line1.anchor.setTo(0,0.5);
-    line2.anchor.setTo(0,0.5);
+    //line1.anchor.setTo(0,0.5);
+    //line2.anchor.setTo(0,0.5);
     
-    line1.angle +=90;
-    line2.angle +=90;
+    //line1.angle +=90;
+    //line2.angle +=90;
 
 
 	//line1.body.static = true;
@@ -116,19 +118,21 @@ function create() {
 }
 
 function update() {
-	
-    game.physics.arcade.collide(player1, line1);
-
+	player1.body.velocity.x = 0;
+   player1.body.velocity.y = 0;
+    if (game.physics.arcade.collide(player1, line1,null))
+    { 
+console.log("!!!");
     //  Checks to see if the player overlaps with any of the drops, if he does call the collectStar function
     //ame.physics.arcade.overlap(player, drops, collectStar, null, this);
 
     //  Reset the players velocity (movement)
-    player1.body.velocity.x = 0;
-    player1.body.velocity.y = 0;
-    
-    player2.body.velocity.x = 0;
-    player2.body.velocity.y = 0;
 
+    
+   // player2.body.velocity.x = 0;
+  //  player2.body.velocity.y = 0;
+}
+else { 
     if (cursors.up.isDown)
     {
         //  Move to the left
@@ -201,7 +205,7 @@ function update() {
         player2.animations.stop();
 
         player2.frame = 4;
-    }
+    }}
 }
 
 function playerHit (player, bullet) {

@@ -1,9 +1,9 @@
-<!doctype html> 
-<html lang="en"> 
-<head> 
-	<meta charset="UTF-8" />
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
     <title>Phaser - Making your first game, part 9</title>
-	<script type="text/javascript" src="phaser-2.4.7/build/phaser.min.js"></script>
+    <script type="text/javascript" src="phaser-2.4.7/build/phaser.min.js"></script>
     <style type="text/css">
         body {
             margin: 0;
@@ -14,240 +14,233 @@
 
 <script type="text/javascript">
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+    var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {preload: preload, create: create, update: update});
 
-function preload() {
+    function preload() {
 
-    game.load.image('sky', 'assets/sky.png');
-    game.load.image('ground', 'assets/platform.png');
-    game.load.image('star', 'assets/star.png');
-    game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+        game.load.image('sky', 'assets/sky.png');
+        game.load.image('ground', 'assets/platform.png');
+        game.load.image('star', 'assets/star.png');
+        game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+        game.load.image('bullet', 'assets/bullet.png');
 
-}
-var line1; 
-var line2;
-
-var player1;
-var player2;
-
-var separater;
-var cursors;
-
-var drops;
-var score = 0;
-var scoreText;
-var bullets;
-var bulletTime;
-var fireButton;
-
-function create() {
-
-    //  A simple background for our game
-    game.add.sprite(0, 0, 'sky');
-
-    //  The platforms group contains the ground and the 2 ledges we can jump on
-	        
-    // Here we create the seperators.
-    line1 = game.add.sprite(game.world.width/3, 0, 'ground');
-    line2 = game.add.sprite(2*game.world.width/3, 0, 'ground');
-    game.physics.enable(line1, Phaser.Physics.ARCADE);
-    game.physics.enable(line2, Phaser.Physics.ARCADE);
-
-	// line1.body.immovable = true;
-	
-   // separater.scale.setTo(1, game.world.height);
-	game.physics.arcade.enable(line1);
-	line1.body.immovable = true;
-	
-	game.physics.arcade.enable(line2);
-	line2.body.immovable = true;
-    
-    //line1.anchor.setTo(0,0.5);
-    //line2.anchor.setTo(0,0.5);
-    
-    //line1.angle +=90;
-    //line2.angle +=90;
-
-
-	//line1.body.static = true;
-	//line2.body.immovable = true;
-
-    //  This stops it from falling away when you jump on it
-    // separater.body.immovable = true;
-    
-    
-    player = game.add.group();
-    
-    // The player and its settings
-    player1 = game.add.sprite(32, game.world.height - 150, 'dude');
-    player2 = game.add.sprite(game.world.width - 64, game.world.height - 150, 'dude');
-
-
-    //  Our two animations, walking left and right for player one
-    player1.animations.add('left', [0, 1, 2, 3], 10, true);
-    player1.animations.add('right', [5, 6, 7, 8], 10, true);
-   
-     //  Our two animations, walking left and right for player two
-    player2.animations.add('left', [0, 1, 2, 3], 10, true);
-    player2.animations.add('right', [5, 6, 7, 8], 10, true);
-    
-    game.physics.arcade.enable(player1);
-    game.physics.arcade.enable(player2);
-    
-    player1.body.collideWorldBounds = true;
-	player2.body.collideWorldBounds = true;
-	
-	player1	.body.bounce.setTo(1, 1);
-	
-	//  Finally some drops to collect
-    drops = game.add.group();
-
-    //  We will enable physics for any star that is created in this group
-    drops.enableBody = true;
-
-    var star = drops.create(1 * 70, 0, 'star');
-
-    //  The score Player 1
-    scoreText1 = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
-    //  The score Player 2
-    scoreText2 = game.add.text(game.world.width - 160, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
-
-    //  Our controls.
-    cursors = game.input.keyboard.createCursorKeys();
-    
-    wupKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
-    sdownKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
-    aleftKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
-    drightKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
-
-    fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-
-    bullets.enableBody = true;
-    bullets.physicsBodyType = Phaser.Physics.ARCADE;
-    bullets.createMultiple(30, 'bullet');
-    bullets.setAll('anchor.x', 0,5);
-    bullets.setAll('anchor.y', 1);
-    bullets.setAll('outOfBoundsKill', true);
-    bullets.setAll('checkWorldBounds', true);
-
-
-
-
-}
-function update() {
-	player1.body.velocity.x = 0;
-	player2.body.velocity.x = 0;
-    player1.body.velocity.y = 0;
-  	player2.body.velocity.y = 0;
-    if (game.physics.arcade.collide(player1, line1,null) || game.physics.arcade.collide(player2, line2,null))
-    { 
-console.log("!!!");
-    //  Checks to see if the player overlaps with any of the drops, if he does call the collectStar function
-    //ame.physics.arcade.overlap(player, drops, collectStar, null, this);
-
-    //  Reset the players velocity (movement)
-
-    
-   // player2.body.velocity.x = 0;
-  //  player2.body.velocity.y = 0;
-}
-else { 
-    if (cursors.up.isDown)
-    {a
-        //  Move to the left
-        player1.body.velocity.y = -150;
-
-        player1.animations.play('up');
     }
-    else if (cursors.down.isDown)
-    {
-        //  Move to the right
-        player1.body.velocity.y = 150;
+    var line1;
+    var line2;
 
-        player1.animations.play('down');
+    var player1;
+    var player2;
+
+    var separater;
+    var cursors;
+
+    var drops;
+    var score = 0;
+    var scoreText;
+    var bullets;
+    var bulletTime = 0;
+    var fireButton;
+
+    function create() {
+
+        //  A simple background for our game
+        game.add.sprite(0, 0, 'sky');
+
+        //  The platforms group contains the ground and the 2 ledges we can jump on
+
+        // Here we create the seperators.
+        line1 = game.add.sprite(game.world.width / 3, 0, 'ground');
+        line2 = game.add.sprite(2 * game.world.width / 3, 0, 'ground');
+        game.physics.enable(line1, Phaser.Physics.ARCADE);
+        game.physics.enable(line2, Phaser.Physics.ARCADE);
+
+        // line1.body.immovable = true;
+
+        // separater.scale.setTo(1, game.world.height);
+        game.physics.arcade.enable(line1);
+        line1.body.immovable = true;
+
+        game.physics.arcade.enable(line2);
+        line2.body.immovable = true;
+
+        //line1.anchor.setTo(0,0.5);
+        //line2.anchor.setTo(0,0.5);
+
+        //line1.angle +=90;
+        //line2.angle +=90;
+
+
+        //line1.body.static = true;
+        //line2.body.immovable = true;
+
+        //  This stops it from falling away when you jump on it
+        // separater.body.immovable = true;
+
+
+        player = game.add.group();
+
+        // The player and its settings
+        player1 = game.add.sprite(32, game.world.height - 150, 'dude');
+        player2 = game.add.sprite(game.world.width - 64, game.world.height - 150, 'dude');
+
+
+        //  Our two animations, walking left and right for player one
+        player1.animations.add('left', [0, 1, 2, 3], 10, true);
+        player1.animations.add('right', [5, 6, 7, 8], 10, true);
+
+        //  Our two animations, walking left and right for player two
+        player2.animations.add('left', [0, 1, 2, 3], 10, true);
+        player2.animations.add('right', [5, 6, 7, 8], 10, true);
+
+        game.physics.arcade.enable(player1);
+        game.physics.arcade.enable(player2);
+
+        player1.body.collideWorldBounds = true;
+        player2.body.collideWorldBounds = true;
+
+        player1.body.bounce.setTo(1, 1);
+
+        //  Finally some drops to collect
+        drops = game.add.group();
+
+        //  We will enable physics for any star that is created in this group
+        drops.enableBody = true;
+
+        var star = drops.create(1 * 70, 0, 'star');
+
+        //  The score Player 1
+        scoreText1 = game.add.text(16, 16, 'score: 0', {fontSize: '32px', fill: '#000'});
+        //  The score Player 2
+        scoreText2 = game.add.text(game.world.width - 160, 16, 'score: 0', {fontSize: '32px', fill: '#000'});
+
+        //  Our controls.
+        cursors = game.input.keyboard.createCursorKeys();
+
+        wupKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
+        sdownKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
+        aleftKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
+        drightKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
+
+        fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
+        bullets = game.add.group();
+        bullets.enableBody = true;
+        bullets.physicsBodyType = Phaser.Physics.ARCADE;
+        bullets.createMultiple(30, 'bullet');
+        bullets.setAll('anchor.x', 0, 5);
+        bullets.setAll('anchor.y', 1);
+        bullets.setAll('outOfBoundsKill', true);
+        bullets.setAll('checkWorldBounds', true);
+
+        fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
+
     }
-     else if (cursors.left.isDown)
-    {
-        //  Move to the right
-        player1.body.velocity.x = -150;
+    function update() {
+        player1.body.velocity.x = 0;
+        player2.body.velocity.x = 0;
+        player1.body.velocity.y = 0;
+        player2.body.velocity.y = 0;
+        if (game.physics.arcade.collide(player1, line1, null) || game.physics.arcade.collide(player2, line2, null)) {
+            console.log("!!!");
+            //  Checks to see if the player overlaps with any of the drops, if he does call the collectStar function
+            //ame.physics.arcade.overlap(player, drops, collectStar, null, this);
 
-        player1.animations.play('left');
+            //  Reset the players velocity (movement)
+
+
+            // player2.body.velocity.x = 0;
+            //  player2.body.velocity.y = 0;
+        }
+        else {
+            if (cursors.up.isDown) {
+                //  Move to the left
+                player1.body.velocity.y = -150;
+
+                player1.animations.play('up');
+            }
+            else if (cursors.down.isDown) {
+                //  Move to the right
+                player1.body.velocity.y = 150;
+
+                player1.animations.play('down');
+            }
+            else if (cursors.left.isDown) {
+                //  Move to the right
+                player1.body.velocity.x = -150;
+
+                player1.animations.play('left');
+            }
+            else if (cursors.right.isDown) {
+                //  Move to the right
+                player1.body.velocity.x = 150;
+
+                player1.animations.play('right');
+            }
+
+            else {
+                //  Stand still
+                player1.animations.stop();
+
+                player1.frame = 4;
+            }
+
+            if (fireButton.isDown) {
+                fireBullet(player1);
+            }
+            
+            //Player 2 controls
+            if (wupKey.isDown) {
+                //  Move to the left
+                player2.body.velocity.y = -150;
+
+                player2.animations.play('up');
+            }
+            else if (sdownKey.isDown) {
+                //  Move to the right
+                player2.body.velocity.y = 150;
+
+                player2.animations.play('down');
+            }
+            else if (aleftKey.isDown) {
+                //  Move to the right
+                player2.body.velocity.x = -150;
+
+                player2.animations.play('left');
+            }
+            else if (drightKey.isDown) {
+                //  Move to the right
+                player2.body.velocity.x = 150;
+
+                player2.animations.play('right');
+            }
+            else {
+                //  Stand still
+                player2.animations.stop();
+
+                player2.frame = 4;
+            }
+        }
     }
-     else if (cursors.right.isDown)
-    {
-        //  Move to the right
-        player1.body.velocity.x = 150;
 
-        player1.animations.play('right');
+    function playerHit(player, bullet) {
+
+        //  Add and update the playlive
+        bullet.kill();
+        scoreText.text = 'Score: ' + score;
+
     }
-    else if(fireButton.isDown) {
-        fireBullet(player1);
+    function fireBullet(player) {
+        if (game.time.now > bulletTime) {
+            bullets = bullets.getFirstExists(false);
+
+            if (bullets) {
+                bullets.reset(player.x + 70, player.y + 40);
+                bullets.body.velocity.x = 200;
+                bulletTime = game.time.now + 200;
+            }
+        }
     }
-    else
-    {
-        //  Stand still
-        player1.animations.stop();
-
-        player1.frame = 4;
-    }
-    
-    
-    //Player 2 controls
-    if (wupKey.isDown)
-    {
-        //  Move to the left
-        player2.body.velocity.y = -150;
-
-        player2.animations.play('up');
-    }
-    else if (sdownKey.isDown)
-    {
-        //  Move to the right
-        player2.body.velocity.y = 150;
-
-        player2.animations.play('down');
-    }
-     else if (aleftKey.isDown)
-    {
-        //  Move to the right
-        player2.body.velocity.x = -150;
-
-        player2.animations.play('left');
-    }
-     else if (drightKey.isDown)
-    {
-        //  Move to the right
-        player2.body.velocity.x = 150;
-
-        player2.animations.play('right');
-    }
-    else
-    {
-        //  Stand still
-        player2.animations.stop();
-
-        player2.frame = 4;
-    }}
-}
-
-function playerHit (player, bullet) {
-    
-    //  Add and update the playlive
-    bullet.kill();
-    scoreText.text = 'Score: ' + score;
-
-}
- function fireBullet(player){
-     if(game.time.now> bulletTime)
-        bullet = bullets.getFirstExists(false);
-     if(bullet){
-         bullet.reset(player.x + 70, player.y + 40);
-         bullet.body.velocity.x = 200;
-         bulletTime = game.time.now + 200;
-     }
- }
-
-
 
 
 </script>

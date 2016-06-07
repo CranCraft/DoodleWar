@@ -188,7 +188,7 @@
             if (fireButton.isDown) {
                 fireBullet(player1);
             }
-            
+
             //Player 2 controls
             if (wupKey.isDown) {
                 //  Move to the left
@@ -232,11 +232,11 @@
     }
     function fireBullet(player) {
         if (game.time.now > bulletTime) {
-            bullets = bullets.getFirstExists(false);
+            bullet = bullets.getFirstExists(false);
 
-            if (bullets) {
-                bullets.reset(player.x + 70, player.y + 40);
-                bullets.body.velocity.x = 200;
+            if (bullet) {
+                bullet.reset(player.x + 70, player.y + 40);
+                bullet.body.velocity.x = 200;
                 bulletTime = game.time.now + 200;
             }
         }

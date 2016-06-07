@@ -121,7 +121,9 @@
         aleftKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
         drightKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
 
-        fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+        fireButton1 = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
+        fireButton2 = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 
         bullets = game.add.group();
         bullets.enableBody = true;
@@ -155,70 +157,73 @@
         else {
             if (cursors.up.isDown) {
                 //  Move to the left
+                player2.body.velocity.y = -150;
+
+                player2.animations.play('up');
+            }
+            else if (cursors.down.isDown) {
+                //  Move to the right
+                player2.body.velocity.y = 150;
+
+                player2.animations.play('down');
+            }
+            else if (cursors.left.isDown) {
+                //  Move to the right
+                player2.body.velocity.x = -150;
+
+                player2.animations.play('left');
+            }
+            else if (cursors.right.isDown) {
+                //  Move to the right
+                player2.body.velocity.x = 150;
+
+                player2.animations.play('right');
+            }
+
+            else {
+                //  Stand still
+                player2.animations.stop();
+
+                player2.frame = 4;
+            }
+
+            if (fireButton2.isDown) {
+                fireBullet(player2);
+            }
+
+            //Player 2 controls
+            if (wupKey.isDown) {
+                //  Move to the left
                 player1.body.velocity.y = -150;
 
                 player1.animations.play('up');
             }
-            else if (cursors.down.isDown) {
+            else if (sdownKey.isDown) {
                 //  Move to the right
                 player1.body.velocity.y = 150;
 
                 player1.animations.play('down');
             }
-            else if (cursors.left.isDown) {
+            else if (aleftKey.isDown) {
                 //  Move to the right
                 player1.body.velocity.x = -150;
 
                 player1.animations.play('left');
             }
-            else if (cursors.right.isDown) {
+            else if (drightKey.isDown) {
                 //  Move to the right
                 player1.body.velocity.x = 150;
 
                 player1.animations.play('right');
             }
-
             else {
                 //  Stand still
                 player1.animations.stop();
 
                 player1.frame = 4;
             }
-
-            if (fireButton.isDown) {
+            if (fireButton1.isDown) {
                 fireBullet(player1);
-            }
-
-            //Player 2 controls
-            if (wupKey.isDown) {
-                //  Move to the left
-                player2.body.velocity.y = -150;
-
-                player2.animations.play('up');
-            }
-            else if (sdownKey.isDown) {
-                //  Move to the right
-                player2.body.velocity.y = 150;
-
-                player2.animations.play('down');
-            }
-            else if (aleftKey.isDown) {
-                //  Move to the right
-                player2.body.velocity.x = -150;
-
-                player2.animations.play('left');
-            }
-            else if (drightKey.isDown) {
-                //  Move to the right
-                player2.body.velocity.x = 150;
-
-                player2.animations.play('right');
-            }
-            else {
-                //  Stand still
-                player2.animations.stop();
-
-                player2.frame = 4;
             }
         }
     }
@@ -231,12 +236,18 @@
 
     }
     function fireBullet(player) {
+
         if (game.time.now > bulletTime) {
             bullet = bullets.getFirstExists(false);
 
             if (bullet) {
-                bullet.reset(player.x + 70, player.y + 40);
-                bullet.body.velocity.x = 200;
+                if (player == player1) {
+                    bullet.reset(player.x + 70, player.y + 40);
+                    bullet.body.velocity.x = 200;
+                } else {
+                    bullet.reset(player.x - 70, player.y + 40);
+                    bullet.body.velocity.x = -200;
+                }
                 bulletTime = game.time.now + 200;
             }
         }

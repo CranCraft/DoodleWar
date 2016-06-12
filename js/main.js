@@ -95,7 +95,7 @@ function create() {
 	fireButton2 = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 
 
-	// Bullets Player 1
+	// Die Kugel-Variablen für Spieler1
 	bulletsPlayer1 = game.add.group();
 	bulletsPlayer1.enableBody = true;
 	bulletsPlayer1.physicsBodyType = Phaser.Physics.ARCADE;
@@ -105,7 +105,7 @@ function create() {
 	bulletsPlayer1.setAll('outOfBoundsKill', true);
 	bulletsPlayer1.setAll('checkWorldBounds', true);
 
-	// Bullets Player 2
+	// Die Kugel-Variablen für Spieler2
 	bulletsPlayer2 = game.add.group();
 	bulletsPlayer2.enableBody = true;
 	bulletsPlayer2.physicsBodyType = Phaser.Physics.ARCADE;
@@ -115,11 +115,12 @@ function create() {
 	bulletsPlayer2.setAll('outOfBoundsKill', true);
 	bulletsPlayer2.setAll('checkWorldBounds', true);
 
-	fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
-	//  Lives Player 1
+
+	//  Leben für Spieler 1 
 	livesPlayer1 = game.add.group();
 
+	//Setzt die Bilder für das Leben nebeneinander
 	for (var i = 0; i < 3; i++) {
 		var player1Lives = livesPlayer1.create(40 + (30 * i), 60, 'bullet');
 		player1Lives.anchor.setTo(0.5, 0.5);
@@ -127,9 +128,10 @@ function create() {
 		player1Lives.alpha = 0.4;
 	}
 
-	//  Lives Player 2
+	// Leben für Spieler 2
 	livesPlayer2 = game.add.group();
 
+	//Setzt die Bilder für das Leben nebeneinander
 	for (var i = 0; i < 3; i++) {
 		var player2Lives = livesPlayer2.create(game.world.width - 100 + (30 * i), 60, 'bullet');
 		player2Lives.anchor.setTo(0.5, 0.5);
@@ -137,7 +139,7 @@ function create() {
 		player2Lives.alpha = 0.4;
 	}
 
-	//  Text
+	//  Text nach Sieg eines Spielers und Anleitung für Restart
 	stateText = game.add.text(game.world.centerX, game.world.centerY, ' ', {
 		font : '84px Arial',
 		fill : '#fff'
@@ -147,17 +149,23 @@ function create() {
 
 }
 
+// Hier ist alles drinne was durcgehend geprüft werden muss
 function update() {
+	
+	// geschwindigkeit wird auf 0 gesetzt, damit sie nur bei klicken gehen
 	player1.body.velocity.x = 0;
 	player2.body.velocity.x = 0;
 	player1.body.velocity.y = 0;
 	player2.body.velocity.y = 0;
+	
+	//Kolliosion der Spieler mit den Linien
 	if (game.physics.arcade.collide(player1, line1, null) || game.physics.arcade.collide(player2, line2, null)) {
 
 	}
 	if (game.physics.arcade.collide(player2, line2, null) || game.physics.arcade.collide(player1, line1, null)) {
 
 	} else {
+		//Hier werden die Bewegungen gesetzt sowie das Schießen
 		if (cursors.up.isDown) {
 			//  Move to the left
 			player2.body.velocity.y = -150;
@@ -219,31 +227,37 @@ function update() {
 			fireBulletPlayer1(player1);
 		}
 	}
-
+	
+	// Wenn Kugel Spieler trifft dann führe playerXgotHit aus
 	game.physics.arcade.overlap(bulletsPlayer2, player1, player1gotHit, null, this);
 	game.physics.arcade.overlap(bulletsPlayer1, player2, player2gotHit, null, this);
 }
 
+// Schießunktion für Spieler 1
 function fireBulletPlayer1(player) {
 
 	if (game.time.now > bulletTime) {
 		bullet = bulletsPlayer1.getFirstExists(false);
 		bullet.reset(player.x + 70, player.y + 40);
 		bullet.body.velocity.x = 200;
-		bulletTime = game.time.now + 200;
+		//Variable für die Geschwindigkeit in der geschossen werden kann
+		bulletTime = game.time.now + 400;
 	}
 }
 
+//Schieß-Funktion für Spieler 2
 function fireBulletPlayer2(player) {
 
 	if (game.time.now > bulletTime) {
 		bullet = bulletsPlayer2.getFirstExists(false);
 		bullet.reset(player.x - 70, player.y + 40);
 		bullet.body.velocity.x = -200;
-		bulletTime = game.time.now + 200;
+		//Variable für die Geschwindigkeit in der geschossen werden kann
+		bulletTime = game.time.now + 400;
 	}
 }
 
+//Verhalten wenn Spieler 1 von einer Kugel getroffen wird
 function player1gotHit(player1) {
 
 	bullet.kill();
@@ -268,6 +282,7 @@ function player1gotHit(player1) {
 
 }
 
+//Verhalten wenn Spieler 2 von einer Kugel getroffen wird 
 function player2gotHit(player2, bullet) {
 
 	bullet.kill();
@@ -292,6 +307,7 @@ function player2gotHit(player2, bullet) {
 
 }
 
+//Wenn spiel neu gestartet wird
 function restart() {
 
 	//  A new level starts

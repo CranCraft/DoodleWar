@@ -53,7 +53,7 @@ function create() {
     stars.enableBody = true;
 
 
-	 game.time.events.add(Phaser.Timer.SECOND * 4, dropBox, this);
+	game.time.events.add(Phaser.Timer.SECOND * 4, dropBox, this);
 
 	// Fügt einen Hintergrund an der Position an der Stelle links oben ein (0,0), das Bild welches verwendet wird hat die Variabel sky
 	game.add.sprite(0, 0, 'sky');
@@ -398,9 +398,9 @@ function restart() {
 }
 
 function dropBox(){
-	 var star = stars.create(1.5 * game.world.width / 3 -30 , 0,'box');
-
-	 star.body.gravity.y = 6;
+	 box = game.add.sprite(1.5 * game.world.width / 3 -30 , 0,'box');
+	game.physics.arcade.enable(box);
+	box.body.gravity.y = 100;
 	
 }
 // function powerUpGotHit() {

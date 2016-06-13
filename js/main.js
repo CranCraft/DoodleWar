@@ -35,8 +35,6 @@ var bullets;
 var bulletTime = 0;
 var bulletTime2 = 0;
 var fireButton;
-var bulletVelocity1 = 500;
-var bulletVelocity2 = 500;
 
 
 //Spiel läuft = 0, Spiel beendet 1;
@@ -257,7 +255,7 @@ function fireBulletPlayer1() {
 		bullet.reset(player1.x + 70, player1.y + 40);
 		bullet.body.velocity.x = 200;
 		//Variable für die Geschwindigkeit in der geschossen werden kann
-		bulletTime = game.time.now + bulletVelocity1;
+		bulletTime = game.time.now + 500;
 	}
 }
 
@@ -269,7 +267,7 @@ function fireBulletPlayer2() {
 		bullet.reset(player2.x - 70, player2.y + 40);
 		bullet.body.velocity.x = -200;
 		//Variable für die Geschwindigkeit in der geschossen werden kann
-		bulletTime2 = game.time.now + bulletVelocity2; 
+		bulletTime2 = game.time.now + 500; 
 	}
 }
 
@@ -323,26 +321,6 @@ function player2gotHit(player2) {
 		game.input.onTap.addOnce(restart, this);
 	}
 
-}
-
-//Funktion um die Schießgeschwindigkeit zu erhöhen
-function increaseBulletVelocity(Player1){
-    bulletVelocity1 = 2*bulletVelocity1;
-    game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard(Player1), this);
-}
-
-function increaseBulletVelocity(Player2){
-    bulletVelocity2 = 2*bulletVelocity2;
-    game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard(Player2), this);
-
-}
-
-function setBulletVelocityToStandard(Player1){
-        bulletVelocity1 = 500;
-}
-
-function setBulletVelocityToStandard(Player2){
-        bulletVelocity2 = 500;
 }
 
 //Wenn spiel neu gestartet wird

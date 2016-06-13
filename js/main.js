@@ -13,6 +13,7 @@ function preload() {
 	game.load.image('star', 'assets/star.png');
 	game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
 	game.load.image('bullet', 'assets/bullet.png');
+	game.load.image('box' , 'assets/box.png');
 
 }
 
@@ -39,6 +40,7 @@ var fireButton;
 //Spiel läuft = 0, Spiel beendet 1;
 var gameOn = 0;
 
+var box;
 
 // Folgende Funktion wird zu beginn einmal ausgeführt und ersellt alle Objekte für ein Spiel inklusive Spieler, Leben usw.
 function create() {
@@ -46,6 +48,13 @@ function create() {
 
 	// Fügt einen Hintergrund an der Position an der Stelle links oben ein (0,0), das Bild welches verwendet wird hat die Variabel sky
 	game.add.sprite(0, 0, 'sky');
+
+
+
+ 	game.time.events.add(Phaser.Timer.SECOND * 2, dropBox, this);
+
+
+
 
 
 	// An dieser Stelle erzeugen wir die beiden Wände die beide Spieler separieren. Dazu wird die gesamte Spielbreite durch
@@ -266,7 +275,7 @@ function fireBulletPlayer2() {
 		bullet.reset(player2.x - 70, player2.y + 40);
 		bullet.body.velocity.x = -200;
 		//Variable für die Geschwindigkeit in der geschossen werden kann
-		bulletTime2 = game.time.now + 500;
+		bulletTime2 = game.time.now + 500; 
 	}
 }
 
@@ -326,7 +335,8 @@ function player2gotHit(player2, bullet) {
 function restart() {
 
 	//  A new level starts
-
+	gameOn = 0;
+	
 	//resets the life count
 	livesPlayer1.callAll('revive');
 	livesPlayer2.callAll('revive');
@@ -336,5 +346,11 @@ function restart() {
 	player2.revive();
 	//hides the text
 	stateText.visible = false;
+
+}
+
+function dropBox(){
+	box = game.add.sprite(game.world.width / 3 +(0.5*game.world.width / 3)-25, 0, 'box');
+	box.body.velocity.y = +150;
 
 }

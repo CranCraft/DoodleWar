@@ -293,7 +293,7 @@ function player1gotHit(player, bullet) {
 	// When the player dies
 	if (livesPlayer1.countLiving() < 1) {
 		player1.kill();
-		bulletsPlayer2.callAll('kill');
+		bulletsPlayer1.destroy();
 
 		stateText.text = "Spieler 2 Gewinnt \n Klick für Neustart";
 		stateText.visible = true;
@@ -319,7 +319,7 @@ function player2gotHit(player, bullet) {
 	// When the player dies
 	if (livesPlayer2.countLiving() < 1) {
 		player2.kill();
-		bulletsPlayer1.callAll('kill');
+		bulletsPlayer2.destroy();
 
 		stateText.text = "Spieler 1 Gewinnt \n Klick für Neustart";
 		stateText.visible = true;

@@ -1,8 +1,9 @@
 // Erstellt ein neues Fenster mit gegeben Parametern und weist es der Variabel Game zu
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-game', {
+var game = new Phaser.Game("100%", "75%", Phaser.AUTO, 'phaser-game', {
 	preload : preload,
 	create : create,
-	update : update
+	update : update,
+	resize : onResize
 });
 
 //Hier werden die Bilder mit entsprechenden Variabeln geladen und wenn angegeben mit größen
@@ -349,8 +350,20 @@ function restart() {
 
 }
 
+<<<<<<< HEAD
 function dropBox(){
 	box = game.add.sprite(game.world.width / 3 +(0.5*game.world.width / 3)-25, 0, 'box');
 	box.body.velocity.y = +150;
 
 }
+=======
+function onResize(){
+	levelText.x = Math.round((game.width-levelText.width)/2);
+	levelText.y = game.height;
+	titleText.x = Math.round((game.width-titleText.width)/2);
+	fixedGroup.x = Math.round((game.width-320)/2);
+	fixedGroup.y = Math.round((game.height-320)/2);
+	movingGroup.x = Math.round((game.width-320)/2);
+	movingGroup.y = Math.round((game.height-320)/2);
+}
+>>>>>>> origin/master

@@ -295,9 +295,10 @@ function fireBulletPlayer2() {
 }
 
 //Verhalten wenn Spieler 1 von einer Kugel getroffen wird
-function player1gotHitPlayer1() {
 
-	bulletsPlayer2.destroy();
+function player1gotHit(player, bullet) {
+
+	bullet.kill();
 
 	live = livesPlayer1.getFirstAlive();
 
@@ -308,7 +309,7 @@ function player1gotHitPlayer1() {
 	// When the player dies
 	if (livesPlayer1.countLiving() < 1) {
 		player1.kill();
-		bulletsPlayer2.callAll('kill');
+		bulletsPlayer1.destroy();
 
 		stateText.text = "Spieler 2 Gewinnt \n Klick für Neustart";
 		stateText.visible = true;
@@ -321,9 +322,10 @@ function player1gotHitPlayer1() {
 }
 
 //Verhalten wenn Spieler 2 von einer Kugel getroffen wird 
-function player2gotHitPlayer2() {
 
-	bulletsPlayer1.destroy();
+function player2gotHit(player, bullet) {
+
+	bullet.kill();
 
 	live = livesPlayer2.getFirstAlive();
 
@@ -334,7 +336,7 @@ function player2gotHitPlayer2() {
 	// When the player dies
 	if (livesPlayer2.countLiving() < 1) {
 		player2.kill();
-		bulletsPlayer1.callAll('kill');
+		bulletsPlayer2.destroy();
 
 		stateText.text = "Spieler 1 Gewinnt \n Klick für Neustart";
 		stateText.visible = true;

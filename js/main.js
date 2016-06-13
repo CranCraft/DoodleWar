@@ -158,13 +158,51 @@ function update() {
 	player1.body.velocity.y = 0;
 	player2.body.velocity.y = 0;
 	
+		if (fireButton1.isDown) {
+			fireBulletPlayer1();
+		}
+		
+		if (fireButton2.isDown) {
+			fireBulletPlayer2();
+		}
+		
+		
 	//Kolliosion der Spieler mit den Linien
-	if (game.physics.arcade.collide(player1, line1, null) || game.physics.arcade.collide(player2, line2, null)) {
+	if (game.physics.arcade.collide(player1, line1, null) && game.physics.arcade.collide(player2, line2, null)) {
 
 	}
-	if (game.physics.arcade.collide(player2, line2, null) || game.physics.arcade.collide(player1, line1, null)) {
+	if ((game.physics.arcade.collide(player2, line2, null) || game.physics.arcade.collide(player1, line1, null))) {
 
-	} else {
+	} 
+	
+	
+		//Player 1 controls
+		if (wupKey.isDown) {
+			//  Move to the left
+			player1.body.velocity.y = -150;
+
+			player1.animations.play('up');
+		} else if (sdownKey.isDown) {
+			//  Move to the right
+			player1.body.velocity.y = 150;
+
+			player1.animations.play('down');
+		} else if (aleftKey.isDown) {
+			//  Move to the right
+			player1.body.velocity.x = -150;
+
+			player1.animations.play('left');
+		} else if (drightKey.isDown) {
+			//  Move to the right
+			player1.body.velocity.x = 150;
+			player1.animations.play('right');
+		} else {
+			//  Stand still
+			player1.animations.stop();
+
+			player1.frame = 4;
+		}
+		
 		//Hier werden die Bewegungen gesetzt sowie das Schießen
 		if (cursors.up.isDown) {
 			//  Move to the left
@@ -193,40 +231,8 @@ function update() {
 			player2.frame = 4;
 		}
 
-		if (fireButton2.isDown) {
-			fireBulletPlayer2(player2);
-		}
 
-		//Player 2 controls
-		if (wupKey.isDown) {
-			//  Move to the left
-			player1.body.velocity.y = -150;
 
-			player1.animations.play('up');
-		} else if (sdownKey.isDown) {
-			//  Move to the right
-			player1.body.velocity.y = 150;
-
-			player1.animations.play('down');
-		} else if (aleftKey.isDown) {
-			//  Move to the right
-			player1.body.velocity.x = -150;
-
-			player1.animations.play('left');
-		} else if (drightKey.isDown) {
-			//  Move to the right
-			player1.body.velocity.x = 150;
-			player1.animations.play('right');
-		} else {
-			//  Stand still
-			player1.animations.stop();
-
-			player1.frame = 4;
-		}
-		if (fireButton1.isDown) {
-			fireBulletPlayer1(player1);
-		}
-	}
 	
 	// Wenn Kugel Spieler trifft dann führe playerXgotHit aus
 	game.physics.arcade.overlap(bulletsPlayer2, player1, player1gotHit, null, this);
@@ -234,26 +240,26 @@ function update() {
 }
 
 // Schießunktion für Spieler 1
-function fireBulletPlayer1(player) {
+function fireBulletPlayer1() {
 
 	if (game.time.now > bulletTime) {
 		bullet = bulletsPlayer1.getFirstExists(false);
-		bullet.reset(player.x + 70, player.y + 40);
+		bullet.reset(player1.x + 70, player1.y + 40);
 		bullet.body.velocity.x = 200;
 		//Variable für die Geschwindigkeit in der geschossen werden kann
-		bulletTime = game.time.now + 400;
+		bulletTime = game.time.now + 500;
 	}
 }
 
 //Schieß-Funktion für Spieler 2
-function fireBulletPlayer2(player) {
+function fireBulletPlayer2() {
 
 	if (game.time.now > bulletTime) {
 		bullet = bulletsPlayer2.getFirstExists(false);
-		bullet.reset(player.x - 70, player.y + 40);
+		bullet.reset(player2.x - 70, player2.y + 40);
 		bullet.body.velocity.x = -200;
 		//Variable für die Geschwindigkeit in der geschossen werden kann
-		bulletTime = game.time.now + 400;
+		bulletTime = game.time.now + 500;
 	}
 }
 

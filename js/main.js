@@ -1,9 +1,8 @@
 // Erstellt ein neues Fenster mit gegeben Parametern und weist es der Variabel Game zu
-var game = new Phaser.Game("100%", "75%", Phaser.AUTO, 'phaser-game', {
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-game', {
 	preload : preload,
 	create : create,
-	update : update,
-	resize : onResize
+	update : update
 });
 
 //Hier werden die Bilder mit entsprechenden Variabeln geladen und wenn angegeben mit größen
@@ -51,14 +50,6 @@ function create() {
 
 	// Fügt einen Hintergrund an der Position an der Stelle links oben ein (0,0), das Bild welches verwendet wird hat die Variabel sky
 	game.add.sprite(0, 0, 'sky');
-
-
-
- 	game.time.events.add(Phaser.Timer.SECOND * 2, dropBox, this);
-
-
-
-
 
 	// An dieser Stelle erzeugen wir die beiden Wände die beide Spieler separieren. Dazu wird die gesamte Spielbreite durch
 	// 3 geteilt. Linie 1 wird an Stelle der (Spielbreite : 3) angelegt die linie 2 (Spielbreite : 3 * 2). Die Grafik heißt ground
@@ -285,7 +276,7 @@ function fireBulletPlayer2() {
 //Verhalten wenn Spieler 1 von einer Kugel getroffen wird
 function player1gotHit(player1) {
 
-	bullet.kill();
+	bulletsPlayer2.destroy();
 
 	live = livesPlayer1.getFirstAlive();
 
@@ -309,9 +300,9 @@ function player1gotHit(player1) {
 }
 
 //Verhalten wenn Spieler 2 von einer Kugel getroffen wird 
-function player2gotHit(player2, bullet) {
+function player2gotHit(player2) {
 
-	bullet.kill();
+	bulletsPlayer1.destroy();
 
 	live = livesPlayer2.getFirstAlive();
 
@@ -372,8 +363,6 @@ function restart() {
 
 }
 
-function dropBox(){
-	box = game.add.sprite(game.world.width / 3 +(0.5*game.world.width / 3)-25, 0, 'box');
-	box.body.velocity.y = +150;
-
+function powerUpGotHit() {
+	
 }

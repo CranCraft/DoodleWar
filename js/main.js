@@ -32,6 +32,7 @@ var cursors;
 // Schießen Variablen (bullets für die Kollisonsbrechnung, bulletTime = ???, fireButton für die auswahl des Schießenbuttons)
 var bullets;
 var bulletTime = 0;
+var bulletTime2 = 0;
 var fireButton;
 
 
@@ -254,12 +255,12 @@ function fireBulletPlayer1() {
 //Schieß-Funktion für Spieler 2
 function fireBulletPlayer2() {
 
-	if (game.time.now > bulletTime) {
+	if (game.time.now > bulletTime2) {
 		bullet = bulletsPlayer2.getFirstExists(false);
 		bullet.reset(player2.x - 70, player2.y + 40);
 		bullet.body.velocity.x = -200;
 		//Variable für die Geschwindigkeit in der geschossen werden kann
-		bulletTime = game.time.now + 500;
+		bulletTime2 = game.time.now + 500;
 	}
 }
 

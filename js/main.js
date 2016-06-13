@@ -251,6 +251,8 @@ function update() {
 	// Wenn Kugel Spieler trifft dann führe playerXgotHit aus
 	game.physics.arcade.overlap(bulletsPlayer2, player1, player1gotHit, null, this);
 	game.physics.arcade.overlap(bulletsPlayer1, player2, player2gotHit, null, this);
+    game.physics.arcade.overlap(bulletsPlayer1, player2, player2gotHit, null, this);
+
 }
 
 // Schießunktion für Spieler 1

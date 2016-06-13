@@ -42,11 +42,15 @@ var bulletVelocity2 = 500;
 //Spiel läuft = 0, Spiel beendet 1;
 var gameOn = 0;
 
-var box;
 
 // Folgende Funktion wird zu beginn einmal ausgeführt und ersellt alle Objekte für ein Spiel inklusive Spieler, Leben usw.
 function create() {
+	stars = game.add.group();
 
+    stars.enableBody = true;
+
+
+	 game.time.events.add(Phaser.Timer.SECOND * 4, dropBox, this);
 
 	// Fügt einen Hintergrund an der Position an der Stelle links oben ein (0,0), das Bild welches verwendet wird hat die Variabel sky
 	game.add.sprite(0, 0, 'sky');
@@ -375,6 +379,12 @@ function restart() {
 
 }
 
-function powerUpGotHit() {
+function dropBox(){
+	 var star = stars.create(1.5 * game.world.width / 3 -30 , 0,'box');
+
+	 star.body.gravity.y = 6;
 	
 }
+// function powerUpGotHit() {
+// 	
+// }

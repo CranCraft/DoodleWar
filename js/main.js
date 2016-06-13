@@ -280,9 +280,9 @@ function fireBulletPlayer2() {
 }
 
 //Verhalten wenn Spieler 1 von einer Kugel getroffen wird
-function player1gotHit(player1) {
+function player1gotHit(player, bullet) {
 
-	bulletsPlayer2.destroy();
+	bullet.kill();
 
 	live = livesPlayer1.getFirstAlive();
 
@@ -306,9 +306,9 @@ function player1gotHit(player1) {
 }
 
 //Verhalten wenn Spieler 2 von einer Kugel getroffen wird 
-function player2gotHit(player2) {
+function player2gotHit(player, bullet) {
 
-	bulletsPlayer1.destroy();
+	bullet.kill();
 
 	live = livesPlayer2.getFirstAlive();
 

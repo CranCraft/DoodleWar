@@ -36,6 +36,10 @@ var bulletTime2 = 0;
 var fireButton;
 
 
+//Spiel läuft = 0, Spiel beendet 1;
+var gameOn = 0;
+
+
 // Folgende Funktion wird zu beginn einmal ausgeführt und ersellt alle Objekte für ein Spiel inklusive Spieler, Leben usw.
 function create() {
 
@@ -159,14 +163,15 @@ function update() {
 	player1.body.velocity.y = 0;
 	player2.body.velocity.y = 0;
 	
-		if (fireButton1.isDown) {
+		if(gameOn==0){
+            if (fireButton1.isDown) {
 			fireBulletPlayer1();
 		}
 		
 		if (fireButton2.isDown) {
 			fireBulletPlayer2();
 		}
-		
+        }
 		
 	//Kolliosion der Spieler mit den Linien
 	if (game.physics.arcade.collide(player1, line1, null) && game.physics.arcade.collide(player2, line2, null)) {
@@ -176,7 +181,7 @@ function update() {
 
 	} 
 	
-	
+	if(gameOn == 0){
 		//Player 1 controls
 		if (wupKey.isDown) {
 			//  Move to the left
@@ -232,7 +237,8 @@ function update() {
 			player2.frame = 4;
 		}
 
-
+    }
+    
 
 	
 	// Wenn Kugel Spieler trifft dann führe playerXgotHit aus
@@ -282,6 +288,7 @@ function player1gotHit(player1) {
 
 		stateText.text = "Spieler 2 Gewinnt \n Klick für Neustart";
 		stateText.visible = true;
+        gameOn = 1;
 
 		//the "click to restart" handler
 		game.input.onTap.addOnce(restart, this);
@@ -307,6 +314,7 @@ function player2gotHit(player2, bullet) {
 
 		stateText.text = "Spieler 1 Gewinnt \n Klick für Neustart";
 		stateText.visible = true;
+        gameOn = 1;
 
 		//the "click to restart" handler
 		game.input.onTap.addOnce(restart, this);

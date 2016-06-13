@@ -42,6 +42,9 @@ var bulletVelocity2 = 500;
 //Spiel läuft = 0, Spiel beendet 1;
 var gameOn = 0;
 
+//powerUps
+var box;
+
 
 // Folgende Funktion wird zu beginn einmal ausgeführt und ersellt alle Objekte für ein Spiel inklusive Spieler, Leben usw.
 function create() {
@@ -251,9 +254,21 @@ function update() {
 	// Wenn Kugel Spieler trifft dann führe playerXgotHit aus
 	game.physics.arcade.overlap(bulletsPlayer2, player1, player1gotHit, null, this);
 	game.physics.arcade.overlap(bulletsPlayer1, player2, player2gotHit, null, this);
-    game.physics.arcade.overlap(bulletsPlayer1, player2, player2gotHit, null, this);
+    
+    //Wenn Kugel PowerUps trifft
+    game.physics.arcade.overlap(bulletsPlayer1, box, boxGotHit, null, this);
+	game.physics.arcade.overlap(bulletsPlayer1, box, boxGotHit, null, this);
 
 }
+
+//PowerUp-Treff-Funktion
+    function boxGotHit(p){
+        var randomNumber = game.rnd.integerInRanger(0,2);
+        witch(randomNumber){
+            case 1: increaseBulletVelocity(p);
+            case 2: decreaseBulletVelocity(p);
+        }
+    }
 
 // Schießunktion für Spieler 1
 function fireBulletPlayer1() {
@@ -280,7 +295,7 @@ function fireBulletPlayer2() {
 }
 
 //Verhalten wenn Spieler 1 von einer Kugel getroffen wird
-function player1gotHit(player1) {
+function player1gotHitPlayer1() {
 
 	bulletsPlayer2.destroy();
 
@@ -306,7 +321,7 @@ function player1gotHit(player1) {
 }
 
 //Verhalten wenn Spieler 2 von einer Kugel getroffen wird 
-function player2gotHit(player2) {
+function player2gotHitPlayer2() {
 
 	bulletsPlayer1.destroy();
 
@@ -332,35 +347,34 @@ function player2gotHit(player2) {
 }
 
 //Funktion um die Schießgeschwindigkeit zu erhöhen
-function increaseBulletVelocity(Player1){
-    bulletVelocity1 = 2*bulletVelocity1;
-    game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard(Player1), this);
+function increaseBulletVelocity(Player){
+   
+        if(Player == Player1){
+            bulletVelocity1 = 2*bulletVelocity1;
+            game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard(Player1), this);
+        }else{
+            bulletVelocity2 = 2*bulletVelocity2;
+            game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard(Player2), this);
+        }
 }
 
-function increaseBulletVelocity(Player2){
-    bulletVelocity2 = 2*bulletVelocity2;
-    game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard(Player2), this);
-
-}
-
-function setBulletVelocityToStandard(Player1){
-        bulletVelocity1 = 500;
-}
-
-function setBulletVelocityToStandard(Player2){
-        bulletVelocity2 = 500;
+function setBulletVelocityToStandard(Player){
+        if(Player == player1){    
+            bulletVelocity1 = 500;
+        }else{
+            bulletVelocity2 = 500;
+        }
 }
 
 //Funktion um die Schießgeschwindigkeit des Gegeners zu verlangsamen
-function decreaseBulletVelocity(Player1){
-    bulletVelocity2 = bulletVelocity1/2;
-    game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard(Player1), this);
-}
-
-function decreaseBulletVelocity(Player2){
-    bulletVelocity1 = bulletVelocity2/2;
+function decreaseBulletVelocity(Player){
+    if(Player == player1){
+            bulletVelocity2 = bulletVelocity1/2;
+            game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard(Player1), this);
+    }else{
+           bulletVelocity1 = bulletVelocity2/2;
     game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard(Player2), this);
-
+        }
 }
 
 //Wenn spiel neu gestartet wird

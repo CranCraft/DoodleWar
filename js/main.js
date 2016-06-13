@@ -345,6 +345,18 @@ function setBulletVelocityToStandard(Player2){
         bulletVelocity2 = 500;
 }
 
+//Funktion um die Schießgeschwindigkeit des Gegeners zu verlangsamen
+function decreaseBulletVelocity(Player1){
+    bulletVelocity2 = bulletVelocity1/2;
+    game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard(Player1), this);
+}
+
+function decreaseBulletVelocity(Player2){
+    bulletVelocity1 = bulletVelocity2/2;
+    game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard(Player2), this);
+
+}
+
 //Wenn spiel neu gestartet wird
 function restart() {
 

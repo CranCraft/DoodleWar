@@ -257,17 +257,19 @@ function update() {
     
     //Wenn Kugel PowerUps trifft
     game.physics.arcade.overlap(bulletsPlayer1, box, boxGotHit, null, this);
-	game.physics.arcade.overlap(bulletsPlayer1, box, boxGotHit, null, this);
+	game.physics.arcade.overlap(bulletsPlayer2, box, boxGotHit, null, this);
 
 }
 
 //PowerUp-Treff-Funktion
     function boxGotHit(p){
         var randomNumber = game.rnd.integerInRanger(0,2);
-        witch(randomNumber){
+        switch(randomNumber){
             case 1: increaseBulletVelocity(p);
             case 2: decreaseBulletVelocity(p);
         }
+        box.kill();
+        bullet.kill();
     }
 
 // Schießunktion für Spieler 1

@@ -267,8 +267,8 @@ function update() {
 	game.physics.arcade.overlap(bulletsPlayer1, player2, player2gotHit, null, this);
     
     //Wenn Kugel PowerUps trifft führe boxGotHit aus
-    game.physics.arcade.overlap(bulletsPlayer1, boxes, boxGotHit(player1), null, this);
-	game.physics.arcade.overlap(bulletsPlayer2, boxes, boxGotHit(player2), null, this);
+    game.physics.arcade.overlap(bulletsPlayer1, boxes, boxGotHit, null, this);
+	game.physics.arcade.overlap(bulletsPlayer2, boxes, boxGotHit, null, this);
 
 }
 
@@ -297,17 +297,30 @@ function fireBulletPlayer2() {
 	}
 }
 
+//lässt die Box regelmäßig runterfallen, gleich wie Schieffunktion
+function dropBox(){
+if(game.time.now > boxesTime){
+    box = boxes.getFirstExists(false);
+    box.reset(1.5 * game.world.width / 3 -30 , 0);
+    box.body.velocity.y = 500;
+    
+    //Variable für die Geschwindigkeit in der geschossen werden kann
+    boxesTime = game.time.now + boxesVelocity;
+    
+    }
+}
+
 //PowerUp-Treff-Funktion
-    function boxGotHit(Player){
-        //bullet.kill();
-        //box.kill();
+function boxGotHit(Player){
+    bullet.kill();
+    box.kill();
         
         /*var randomNumber = game.rnd.integerInRanger(0,1);
         switch(randomNumber){
-            case 0: increaseBulletVelocity(Player);
-            case 1: decreaseBulletVelocity(Player);
+            case 0: increaseBulletVelocity;
+            case 1: decreaseBulletVelocity;
         }*/
-    }
+}
 
 
 //Verhalten wenn Spieler 1 von einer Kugel getroffen wird
@@ -336,8 +349,8 @@ function player1gotHit(player, bullet) {
 
 }
 
-//Verhalten wenn Spieler 2 von einer Kugel getroffen wird 
 
+//Verhalten wenn Spieler 2 von einer Kugel getroffen wird 
 function player2gotHit(player, bullet) {
 
 	bullet.kill();
@@ -363,7 +376,7 @@ function player2gotHit(player, bullet) {
 
 }
 
-//Funktion um die Schießgeschwindigkeit zu erhöhen
+//Funktion um die Schießgeschwindigkeit zu verändern
 function increaseBulletVelocity(Player){
    
         if(Player == Player1){
@@ -410,17 +423,6 @@ function restart() {
 	//hides the text
 	stateText.visible = false;
 
-}
-
-function dropBox(){
-    if(game.time.now>boxesTime){
-        box = boxes.getFirstExists(false);
-        box.reset(1.5 * game.world.width / 3 -30 , 0);
-	   box.body.velocity.y = 500;
-    
-        //Variable für die Geschwindigkeit in der geschossen werden kann
-	   boxesTime = game.time.now + boxesVelocity;
-    }
 
 }
 

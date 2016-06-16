@@ -43,7 +43,9 @@ var bulletVelocity2 = 500;
 var gameOn = 0;
 
 //powerUps
-var box;
+var boxes;
+var boxesTime = 0;
+var boxesVelocity = 500;
 
 
 // Folgende Funktion wird zu beginn einmal ausgeführt und ersellt alle Objekte für ein Spiel inklusive Spieler, Leben usw.
@@ -53,7 +55,7 @@ function create() {
     stars.enableBody = true;
 
 
-	game.time.events.add(Phaser.Timer.SECOND * 4, dropBox, this);
+	//game.time.events.add(Phaser.Timer.SECOND * 4, dropBox, this);
 
 	// Fügt einen Hintergrund an der Position an der Stelle links oben ein (0,0), das Bild welches verwendet wird hat die Variabel sky
 	game.add.sprite(0, 0, 'sky');
@@ -109,7 +111,8 @@ function create() {
 	// Schießebutton für Spieler 2 (leertaste)
 	fireButton2 = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 
-
+    
+    
 	// Die Kugel-Variablen für Spieler1
 	bulletsPlayer1 = game.add.group();
 	bulletsPlayer1.enableBody = true;
@@ -130,7 +133,16 @@ function create() {
 	bulletsPlayer2.setAll('outOfBoundsKill', true);
 	bulletsPlayer2.setAll('checkWorldBounds', true);
 
-
+     //Power Up Box
+    boxes = game.add.group();
+    boxes.enableBody = true;
+    boxes.physicsBodyType = Phaser.Physics.ARCADE;
+    boxes.createMultiple(30,'box');
+    boxes.setAll('anchor.x', 0, 5);
+    boxes.setAll('anchor.y', 1);
+    boxes.setAll('outOfBoundKill', true);
+    boxes.setAll('checkWorldBounds', true);
+    
 
 	//  Leben für Spieler 1 
 	livesPlayer1 = game.add.group();
@@ -164,7 +176,7 @@ function create() {
 
 }
 
-// Hier ist alles drinne was durcgehend geprüft werden muss
+// Hier ist alles drinne was durchgehend geprüft werden muss
 function update() {
 	
 	// geschwindigkeit wird auf 0 gesetzt, damit sie nur bei klicken gehen
@@ -249,28 +261,19 @@ function update() {
 
     }
     
-
+    //abwerfen der Boxes während das Spiel läuft
+    if(gameOn == 0) dropBox();
 	
 	// Wenn Kugel Spieler trifft dann führe playerXgotHit aus
 	game.physics.arcade.overlap(bulletsPlayer2, player1, player1gotHit, null, this);
 	game.physics.arcade.overlap(bulletsPlayer1, player2, player2gotHit, null, this);
     
-    //Wenn Kugel PowerUps trifft
-    game.physics.arcade.overlap(bulletsPlayer1, box, boxGotHit, null, this);
-	game.physics.arcade.overlap(bulletsPlayer2, box, boxGotHit, null, this);
+    //Wenn Kugel PowerUps trifft führe boxGotHit aus
+    //game.physics.arcade.overlap(bulletsPlayer1, boxes, boxGotHit(player1), null, this);
+	//game.physics.arcade.overlap(bulletsPlayer2, boxes, boxGotHit(player2), null, this);
 
 }
 
-//PowerUp-Treff-Funktion
-    function boxGotHit(p){
-        var randomNumber = game.rnd.integerInRanger(0,2);
-        switch(randomNumber){
-            case 1: increaseBulletVelocity(p);
-            case 2: decreaseBulletVelocity(p);
-        }
-        box.kill();
-        bullet.kill();
-    }
 
 // Schießunktion für Spieler 1
 function fireBulletPlayer1() {
@@ -295,6 +298,19 @@ function fireBulletPlayer2() {
 		bulletTime2 = game.time.now + bulletVelocity2; 
 	}
 }
+
+//PowerUp-Treff-Funktion
+    function boxGotHit(Player){
+        //bullet.kill();
+        //box.kill();
+        
+        /*var randomNumber = game.rnd.integerInRanger(0,1);
+        switch(randomNumber){
+            case 0: increaseBulletVelocity(Player);
+            case 1: decreaseBulletVelocity(Player);
+        }*/
+    }
+
 
 //Verhalten wenn Spieler 1 von einer Kugel getroffen wird
 
@@ -355,10 +371,10 @@ function increaseBulletVelocity(Player){
    
         if(Player == Player1){
             bulletVelocity1 = 2*bulletVelocity1;
-            game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard(Player1), this);
+            //game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard(Player1), this);
         }else{
             bulletVelocity2 = 2*bulletVelocity2;
-            game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard(Player2), this);
+            //game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard(Player2), this);
         }
 }
 
@@ -374,10 +390,10 @@ function setBulletVelocityToStandard(Player){
 function decreaseBulletVelocity(Player){
     if(Player == player1){
             bulletVelocity2 = bulletVelocity1/2;
-            game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard(Player1), this);
+            //game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard(Player1), this);
     }else{
            bulletVelocity1 = bulletVelocity2/2;
-    game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard(Player2), this);
+            //game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard(Player2), this);
         }
 }
 
@@ -400,11 +416,35 @@ function restart() {
 }
 
 function dropBox(){
-	 box = game.add.sprite(1.5 * game.world.width / 3 -30 , 0,'box');
-	game.physics.arcade.enable(box);
-	box.body.gravity.y = 100;
+    if(game.time.now>boxesTime){
+        box = boxes.getFirstExists(false);
+        box.reset(1.5 * game.world.width / 3 -30 , 0);
+	   box.body.velocity.y = 500;
+    
+        //Variable für die Geschwindigkeit in der geschossen werden kann
+	   boxesTime = game.time.now + boxesVelocity;
+    }
 	
+    
+	
+    
+
+	// Die Kugel-Variablen für Spieler2
+	//bulletsPlayer2 = game.add.group();
+	//bulletsPlayer2.enableBody = true;
+	//bulletsPlayer2.physicsBodyType = Phaser.Physics.ARCADE;
+	//bulletsPlayer2.createMultiple(30, 'bullet');
+	//bulletsPlayer2.setAll('anchor.x', 0, 5);
+	/*bulletsPlayer2.setAll('anchor.y', 1);
+	bulletsPlayer2.setAll('outOfBoundsKill', true);
+	bulletsPlayer2.setAll('checkWorldBounds', true);
+    
+    if (game.time.now > bulletTime) {
+		bullet = bulletsPlayer1.getFirstExists(false);
+		bullet.reset(player1.x + 70, player1.y + 40);
+		bullet.body.velocity.x = 200;
+		//Variable für die Geschwindigkeit in der geschossen werden kann
+		bulletTime = game.time.now + bulletVelocity1;
+	}*/
 }
-// function powerUpGotHit() {
-// 	
-// }
+

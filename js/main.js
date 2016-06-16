@@ -299,8 +299,8 @@ function fireBulletPlayer2() {
 
 //PowerUp-Treff-Funktion
     function boxGotHit(Player){
-        bullet.kill();
-        box.kill();
+        //bullet.kill();
+        //box.kill();
         
         /*var randomNumber = game.rnd.integerInRanger(0,1);
         switch(randomNumber){

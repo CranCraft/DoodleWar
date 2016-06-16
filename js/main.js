@@ -54,9 +54,7 @@ function create() {
 
     stars.enableBody = true;
 
-
-	//game.time.events.add(Phaser.Timer.SECOND * 4, dropBox, this);
-
+    
 	// Fügt einen Hintergrund an der Position an der Stelle links oben ein (0,0), das Bild welches verwendet wird hat die Variabel sky
 	game.add.sprite(0, 0, 'sky');
 
@@ -269,8 +267,8 @@ function update() {
 	game.physics.arcade.overlap(bulletsPlayer1, player2, player2gotHit, null, this);
     
     //Wenn Kugel PowerUps trifft führe boxGotHit aus
-    //game.physics.arcade.overlap(bulletsPlayer1, boxes, boxGotHit(player1), null, this);
-	//game.physics.arcade.overlap(bulletsPlayer2, boxes, boxGotHit(player2), null, this);
+    game.physics.arcade.overlap(bulletsPlayer1, boxes, boxGotHit(player1), null, this);
+	game.physics.arcade.overlap(bulletsPlayer2, boxes, boxGotHit(player2), null, this);
 
 }
 
@@ -301,8 +299,8 @@ function fireBulletPlayer2() {
 
 //PowerUp-Treff-Funktion
     function boxGotHit(Player){
-        //bullet.kill();
-        //box.kill();
+        bullet.kill();
+        box.kill();
         
         /*var randomNumber = game.rnd.integerInRanger(0,1);
         switch(randomNumber){
@@ -313,7 +311,6 @@ function fireBulletPlayer2() {
 
 
 //Verhalten wenn Spieler 1 von einer Kugel getroffen wird
-
 function player1gotHit(player, bullet) {
 
 	bullet.kill();
@@ -424,27 +421,6 @@ function dropBox(){
         //Variable für die Geschwindigkeit in der geschossen werden kann
 	   boxesTime = game.time.now + boxesVelocity;
     }
-	
-    
-	
-    
 
-	// Die Kugel-Variablen für Spieler2
-	//bulletsPlayer2 = game.add.group();
-	//bulletsPlayer2.enableBody = true;
-	//bulletsPlayer2.physicsBodyType = Phaser.Physics.ARCADE;
-	//bulletsPlayer2.createMultiple(30, 'bullet');
-	//bulletsPlayer2.setAll('anchor.x', 0, 5);
-	/*bulletsPlayer2.setAll('anchor.y', 1);
-	bulletsPlayer2.setAll('outOfBoundsKill', true);
-	bulletsPlayer2.setAll('checkWorldBounds', true);
-    
-    if (game.time.now > bulletTime) {
-		bullet = bulletsPlayer1.getFirstExists(false);
-		bullet.reset(player1.x + 70, player1.y + 40);
-		bullet.body.velocity.x = 200;
-		//Variable für die Geschwindigkeit in der geschossen werden kann
-		bulletTime = game.time.now + bulletVelocity1;
-	}*/
 }
 

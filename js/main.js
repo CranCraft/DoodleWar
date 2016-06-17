@@ -12,7 +12,8 @@ function preload() {
 	game.load.image('ground', 'assets/platform.png');
 	game.load.image('star', 'assets/star.png');
 	game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
-	game.load.image('bullet', 'assets/bullet.png');
+	game.load.image('bullet1', 'assets/bullet1.png');
+    game.load.image('bullet2', 'assets/bullet2.png');
 	game.load.image('box' , 'assets/box.png');
 
 }
@@ -45,7 +46,7 @@ var gameOn = 0;
 //powerUps
 var boxes;
 var boxesTime = 0;
-var boxesVelocity = 500;
+var boxesVelocity = 2500;
 
 
 // Folgende Funktion wird zu beginn einmal ausgeführt und ersellt alle Objekte für ein Spiel inklusive Spieler, Leben usw.
@@ -115,7 +116,7 @@ function create() {
 	bulletsPlayer1 = game.add.group();
 	bulletsPlayer1.enableBody = true;
 	bulletsPlayer1.physicsBodyType = Phaser.Physics.ARCADE;
-	bulletsPlayer1.createMultiple(30, 'bullet');
+	bulletsPlayer1.createMultiple(30, 'bullet1');
 	bulletsPlayer1.setAll('anchor.x', 0, 5);
 	bulletsPlayer1.setAll('anchor.y', 1);
 	bulletsPlayer1.setAll('outOfBoundsKill', true);
@@ -125,7 +126,7 @@ function create() {
 	bulletsPlayer2 = game.add.group();
 	bulletsPlayer2.enableBody = true;
 	bulletsPlayer2.physicsBodyType = Phaser.Physics.ARCADE;
-	bulletsPlayer2.createMultiple(30, 'bullet');
+	bulletsPlayer2.createMultiple(30, 'bullet2');
 	bulletsPlayer2.setAll('anchor.x', 0, 5);
 	bulletsPlayer2.setAll('anchor.y', 1);
 	bulletsPlayer2.setAll('outOfBoundsKill', true);
@@ -147,7 +148,7 @@ function create() {
 
 	//Setzt die Bilder für das Leben nebeneinander
 	for (var i = 0; i < 3; i++) {
-		var player1Lives = livesPlayer1.create(40 + (30 * i), 60, 'bullet');
+		var player1Lives = livesPlayer1.create(40 + (30 * i), 60, 'bullet1');
 		player1Lives.anchor.setTo(0.5, 0.5);
 		player1Lives.angle = 90;
 		player1Lives.alpha = 0.4;
@@ -158,7 +159,7 @@ function create() {
 
 	//Setzt die Bilder für das Leben nebeneinander
 	for (var i = 0; i < 3; i++) {
-		var player2Lives = livesPlayer2.create(game.world.width - 100 + (30 * i), 60, 'bullet');
+		var player2Lives = livesPlayer2.create(game.world.width - 100 + (30 * i), 60, 'bullet2');
 		player2Lives.anchor.setTo(0.5, 0.5);
 		player2Lives.angle = 90;
 		player2Lives.alpha = 0.4;
@@ -302,7 +303,7 @@ function dropBox(){
 if(game.time.now > boxesTime){
     box = boxes.getFirstExists(false);
     box.reset(1.5 * game.world.width / 3 -30 , 0);
-    box.body.velocity.y = 500;
+    box.body.velocity.y = 250;
     
     //Variable für die Geschwindigkeit in der geschossen werden kann
     boxesTime = game.time.now + boxesVelocity;
@@ -311,15 +312,22 @@ if(game.time.now > boxesTime){
 }
 
 //PowerUp-Treff-Funktion
-function boxGotHit(Player){
+function boxGotHit(bullet, box){
     bullet.kill();
     box.kill();
-        
-        /*var randomNumber = game.rnd.integerInRanger(0,1);
+    if(bullet.key == 'bullet1'){    
+        var randomNumber = game.rnd.integerInRange(0,1);
         switch(randomNumber){
-            case 0: increaseBulletVelocity;
-            case 1: decreaseBulletVelocity;
-        }*/
+            case 0: increaseBulletVelocity(player1);
+            case 1: decreaseBulletVelocity(player1);
+        }
+    }else{
+        var randomNumber = game.rnd.integerInRange(0,1);
+        switch(randomNumber){
+            case 0: increaseBulletVelocity(player2);
+            case 1: decreaseBulletVelocity(player2);
+        }
+    }
 }
 
 
@@ -379,7 +387,7 @@ function player2gotHit(player, bullet) {
 //Funktion um die Schießgeschwindigkeit zu verändern
 function increaseBulletVelocity(Player){
    
-        if(Player == Player1){
+        if(Player == player1){
             bulletVelocity1 = 2*bulletVelocity1;
             //game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard(Player1), this);
         }else{

@@ -334,24 +334,31 @@ function boxGotHit(bullet, box){
 //Verhalten wenn Spieler 1 von einer Kugel getroffen wird
 function player1gotHit(player, bullet) {
 
+	//Entfernt die Kugel die den Spieler 1 getroffen hat
 	bullet.kill();
 
+	//Anzahl der aktuellen Leben
 	live = livesPlayer1.getFirstAlive();
 
+	//Wenn Leben vorhanden ein Leben entfernen
 	if (live) {
 		live.kill();
 	}
 
-	// When the player dies
+	//Wenn keine Leben mehr => Spieler verliert
 	if (livesPlayer1.countLiving() < 1) {
+		
+		//Entfernt die Spielfigur des Spielers 1
 		player1.kill();
+		
+		//Entfernt alle Kugeln von Spielern 1
 		bulletsPlayer1.destroy();
 
+		//Setzt den Text visible
 		stateText.text = "Spieler 2 Gewinnt \n Klick für Neustart";
 		stateText.visible = true;
-        gameOn = 1;
 
-		//the "click to restart" handler
+		//Wenn auf das Spiel geklickt wird startet das Spiel neu
 		game.input.onTap.addOnce(restart, this);
 	}
 

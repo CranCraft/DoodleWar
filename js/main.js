@@ -14,8 +14,9 @@ function preload() {
 	game.load.image('star', 'assets/star.png');
 	game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
 	game.load.image('bullet1', 'assets/bullet1.png');
-	game.load.image('bullet2', 'assets/bullet2.png');
-	game.load.image('box', 'assets/box.png');
+    game.load.image('bullet2', 'assets/bullet2.png');
+	game.load.image('box' , 'assets/box.png');
+    game.load.image('heart' , 'assets/heart.png');
 
 }
 
@@ -54,6 +55,11 @@ var walls;
 var wallsVelocity = 0;
 var wallLive;
 var dropWallCheck = false;
+
+//Benachrichtungen zu den Spielern was passiert, z.B. PowerUps
+var popUpText1 = 0;
+var popUpText2 = 0;
+
 
 // Folgende Funktion wird zu beginn einmal ausgeführt und ersellt alle Objekte
 // für ein Spiel inklusive Spieler, Leben usw.
@@ -141,6 +147,7 @@ function create() {
 	bulletsPlayer2.setAll('outOfBoundsKill', true);
 	bulletsPlayer2.setAll('checkWorldBounds', true);
 
+<<<<<<< HEAD
 	// Power Up Box
 	boxes = game.add.group();
 	boxes.enableBody = true;
@@ -159,17 +166,15 @@ function create() {
 	walls.setAll('outOfBoundKill', true);
 	walls.setAll('checkWorldBounds', true);
 	walls.setAll('life', 3);
+    
 
-
-	// Leben für Spieler 1
+	//  Leben für Spieler 1 
 	livesPlayer1 = game.add.group();
 
 	// Setzt die Bilder für das Leben nebeneinander
 	for (var i = 0; i < 3; i++) {
-		var player1Lives = livesPlayer1.create(40 + (30 * i), 60, 'bullet1');
+		var player1Lives = livesPlayer1.create(40 + (30 * i), 60, 'heart');
 		player1Lives.anchor.setTo(0.5, 0.5);
-		player1Lives.angle = 90;
-		player1Lives.alpha = 0.4;
 	}
 
 	// Leben für Spieler 2
@@ -177,11 +182,9 @@ function create() {
 
 	// Setzt die Bilder für das Leben nebeneinander
 	for (var i = 0; i < 3; i++) {
-		var player2Lives = livesPlayer2.create(game.world.width - 100
-				+ (30 * i), 60, 'bullet2');
+
+		var player2Lives = livesPlayer2.create(game.world.width - 100 + (30 * i), 60, 'heart');
 		player2Lives.anchor.setTo(0.5, 0.5);
-		player2Lives.angle = 90;
-		player2Lives.alpha = 0.4;
 	}
 
 	// Text nach Sieg eines Spielers und Anleitung für Restart
@@ -191,6 +194,11 @@ function create() {
 	});
 	stateText.anchor.setTo(0.5, 0.5);
 	stateText.visible = false;
+    
+    //Text der Benachrichtigungen für die Spieler
+    style = { font: "15px Arial", fill: "black"};
+    powerUpText1 = this.game.add.text(game.width/3-155, 32, "", style);
+    powerUpText2 = this.game.add.text(2*game.width/3+15, 32, "", style);
 
 }
 
@@ -347,11 +355,35 @@ function dropBox() {
 	}
 }
 
-// PowerUp-Treff-Funktion
-function boxGotHit(bullet, box) {
 
-	// Entfernt die Kugel die die Box getroffen hat
-	bullet.kill();
+//PowerUp-Treff-Funktion
+function boxGotHit(bullet, box){
+	console.log(bullet.key);
+	
+    // Wenn die Kugel von Spieler ein
+    if(bullet.key == 'bullet1'){
+        
+        var randomNumber = game.rnd.integerInRange(0,1);
+        switch(randomNumber){
+            case 0: increaseBulletVelocity(player1);
+            case 1: decreaseBulletVelocity(player1);
+        }
+    }else{
+        var randomNumber = game.rnd.integerInRange(0,1);
+        switch(randomNumber){
+            case 0: increaseBulletVelocity(player2);
+            case 1: decreaseBulletVelocity(player2);
+        }  
+    }
+    
+    // Entfernt die Kugel die die Box getroffen hat
+    bullet.kill();
+    
+    // Entfernt die Box die getroffen wurde
+    box.kill();
+      
+        
+}
 
 	// Entfernt die Box die getroffen wurde
 	box.kill();
@@ -436,39 +468,50 @@ function player2gotHit(player, bullet) {
 
 }
 
-// Funktion um die Schießgeschwindigkeit zu verändern
-function increaseBulletVelocity(Player) {
+//Funktion um die Schießgeschwindigkeit zu verändern
+function increaseBulletVelocity(Player){
+   
+        if(Player == player1){
+            bulletVelocity1 = bulletVelocity1/2;
+            powerUpText1.setText("Du kannst nun schneller schießen");
+            t=game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard1, this);
+            //game.time.events.add(Phaser.Timer.SECOND * 4, popUpText1 = "", this);
+            
 
-	if (Player == player1) {
-		bulletVelocity1 = 2 * bulletVelocity1;
-		// game.time.events.add(Phaser.Timer.SECOND * 4,
-		// setBulletVelocityToStandard(Player1), this);
-	} else {
-		bulletVelocity2 = 2 * bulletVelocity2;
-		// game.time.events.add(Phaser.Timer.SECOND * 4,
-		// setBulletVelocityToStandard(Player2), this);
-	}
+        }else{
+            bulletVelocity2 = bulletVelocity2/2;
+            powerUpText2.setText("Du kannst nun schneller schießen");
+            game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard2, this);
+            //game.time.events.add(Phaser.Timer.SECOND * 4, popUpText2 = "", this);
+
+        }
 }
 
-function setBulletVelocityToStandard(Player) {
-	if (Player == player1) {
-		bulletVelocity1 = 500;
-	} else {
-		bulletVelocity2 = 500;
-	}
+function setBulletVelocityToStandard1(){
+ 
+            bulletVelocity1 = 500;
 }
 
-// Funktion um die Schießgeschwindigkeit des Gegeners zu verlangsamen
-function decreaseBulletVelocity(Player) {
-	if (Player == player1) {
-		bulletVelocity2 = bulletVelocity1 / 2;
-		// game.time.events.add(Phaser.Timer.SECOND * 4,
-		// setBulletVelocityToStandard(Player1), this);
-	} else {
-		bulletVelocity1 = bulletVelocity2 / 2;
-		// game.time.events.add(Phaser.Timer.SECOND * 4,
-		// setBulletVelocityToStandard(Player2), this);
-	}
+function setBulletVelocityToStandard2(){
+    bulletVelocity2 = 500;
+    
+}
+
+//Funktion um die Schießgeschwindigkeit des Gegeners zu verlangsamen
+function decreaseBulletVelocity(Player){
+    if(Player == player1){
+            bulletVelocity2 = bulletVelocity2*2;
+            powerUpText1.setText("Dein Gegner schießt nun langsamer");
+            game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard2, this);
+            //game.time.events.add(Phaser.Timer.SECOND * 4, powerUpText2 = "", this);
+
+    }else{
+           bulletVelocity1 = bulletVelocity1*2;
+           powerUpText2.setText("Dein Gegner schießt nun langsamer");
+           game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard1, this);
+           //game.time.events.add(Phaser.Timer.SECOND * 4, popUpText2 = "", this);
+
+        }
 }
 
 function dropWall(player) {

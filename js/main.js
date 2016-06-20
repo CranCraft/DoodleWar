@@ -147,7 +147,6 @@ function create() {
 	bulletsPlayer2.setAll('outOfBoundsKill', true);
 	bulletsPlayer2.setAll('checkWorldBounds', true);
 
-<<<<<<< HEAD
 	// Power Up Box
 	boxes = game.add.group();
 	boxes.enableBody = true;
@@ -358,7 +357,6 @@ function dropBox() {
 
 //PowerUp-Treff-Funktion
 function boxGotHit(bullet, box){
-	console.log(bullet.key);
 	
     // Wenn die Kugel von Spieler ein
     if(bullet.key == 'bullet1'){
@@ -380,33 +378,9 @@ function boxGotHit(bullet, box){
     bullet.kill();
     
     // Entfernt die Box die getroffen wurde
-    box.kill();
-      
-        
+    box.kill(); 
 }
 
-	// Entfernt die Box die getroffen wurde
-	box.kill();
-
-	// Wenn die Kugel von Spieler ein
-	if (bullet.key == 'bullet1') {
-		var randomNumber = game.rnd.integerInRange(0, 1);
-		switch (randomNumber) {
-		case 0:
-			increaseBulletVelocity(player1);
-		case 1:
-			decreaseBulletVelocity(player1);
-		}
-	} else {
-		var randomNumber = game.rnd.integerInRange(0, 1);
-		switch (randomNumber) {
-		case 0:
-			increaseBulletVelocity(player2);
-		case 1:
-			decreaseBulletVelocity(player2);
-		}
-	}
-}
 
 // Verhalten wenn Spieler 1 von einer Kugel getroffen wird
 function player1gotHit(player, bullet) {
@@ -474,7 +448,7 @@ function increaseBulletVelocity(Player){
         if(Player == player1){
             bulletVelocity1 = bulletVelocity1/2;
             powerUpText1.setText("Du kannst nun schneller schießen");
-            t=game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard1, this);
+            game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard1, this);
             //game.time.events.add(Phaser.Timer.SECOND * 4, popUpText1 = "", this);
             
 

@@ -17,7 +17,7 @@ function preload() {
     game.load.spritesheet('dude2', 'assets/dude2.png', 32, 48);
 	game.load.image('bullet1', 'assets/bullet1.png');
     game.load.image('bullet2', 'assets/bullet2.png');
-	game.load.image('box' , 'assets/box.png');
+	game.load.image('dropbox' , 'assets/box.png');
     game.load.image('heart' , 'assets/herz.png');
 
 }
@@ -85,6 +85,8 @@ function create() {
 	// linie 2 (Spielbreite : 3 * 2). Die Grafik heißt ground
 	line1 = game.add.sprite(game.world.width / 3, 0, 'lines');
 	line2 = game.add.sprite(2 * game.world.width / 3, 0, 'lines');
+	line1.alpha = 0;
+	line2.alpha = 0;
 
 	invisWall = game.add.group();
 	invisWall.physicsBodyType = Phaser.Physics.ARCADE;
@@ -178,21 +180,20 @@ function create() {
 	boxes = game.add.group();
 	boxes.enableBody = true;
 	boxes.physicsBodyType = Phaser.Physics.ARCADE;
-	boxes.createMultiple(30, 'box');
+	boxes.createMultiple(30, 'dropbox');
 	boxes.setAll('anchor.x', 0, 5);
 	boxes.setAll('anchor.y', 1);
 	boxes.setAll('outOfBoundKill', true);
 	boxes.setAll('checkWorldBounds', true);
 
 	// Power Up Walls
-	walls = game.add.group();
-	walls.enableBody = true;
-	walls.physicsBodyType = Phaser.Physics.ARCADE;
-	walls.createMultiple(10, 'box');
+	walls = game.add.physicsGroup(Phaser.Physics.ARCADE);
+	walls.createMultiple(10, 'dropbox');
 	walls.setAll('outOfBoundKill', true);
 	walls.setAll('checkWorldBounds', true);
 	walls.setAll('type', 2);
-    game.physics.arcade.enable(walls);
+	walls.setAll('enableBody', true);
+	walls.setAll('body.immovable', true);
 
 	// Leben für Spieler 1
 	livesPlayer1 = game.add.group();
@@ -268,13 +269,17 @@ function update() {
 	if (game.physics.arcade.collide(player1, line1, null)
 			&& game.physics.arcade.collide(player2, line2, null)
 			&& game.physics.arcade.collide(player1, invisWall, null)
-			&& game.physics.arcade.collide(player2, invisWall, null)) {
+			&& game.physics.arcade.collide(player2, invisWall, null)
+			&& game.physics.arcade.collide(player1, walls, null)
+			&& game.physics.arcade.collide(player2, walls, null)) {
 
 	}
 	if ((game.physics.arcade.collide(player2, line2, null)
 			|| game.physics.arcade.collide(player1, line1, null)
-			|| game.physics.arcade.collide(player2, invisWall, null) || game.physics.arcade
-			.collide(player1, invisWall, null))) {
+			|| game.physics.arcade.collide(player2, invisWall, null) 
+			|| game.physics.arcade.collide(player1, invisWall, null)
+			|| game.physics.arcade.collide(player1, walls, null)
+			|| game.physics.arcade.collide(player2, walls, null))) {
 
 	}
 

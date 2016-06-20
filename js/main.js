@@ -335,7 +335,7 @@ function update() {
 
 	if (gameOn == 0) {
 		if (fireButton1.isDown && !fireButtonCheckPlayer1) {
-			fireButtonCheck = true;
+			fireButtonCheckPlayer1 = true;
 			fireBulletPlayer1();
 		}
 
@@ -344,7 +344,7 @@ function update() {
 		}
 
 		if (fireButton2.isDown && !fireButtonCheckPlayer2) {
-			fireButtonCheck = true;
+			fireButtonCheckPlayer2 = true;
 			fireBulletPlayer2();
 		}
 

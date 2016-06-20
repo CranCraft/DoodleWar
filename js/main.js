@@ -23,6 +23,16 @@ function preload() {
 	game.load.image('heart', 'assets/herz.png');
 	game.load.image('wall1', 'assets/mauer.png');
 	game.load.image('wall2', 'assets/mauer2.png');
+    game.load.image('eins', 'assets/1.png');
+    game.load.image('zwei', 'assets/2.png');
+    game.load.image('drei', 'assets/3.png');
+    game.load.image('vier', 'assets/4.png');
+    game.load.image('fünf', 'assets/5.png');
+    game.load.image('sechs', 'assets/6.png');
+    game.load.image('sieben', 'assets/7.png');
+    game.load.image('acht', 'assets/8.png');
+    game.load.image('neun', 'assets/9.png');
+    game.load.image('zehn', 'assets/10.png');
 }
 
 // Typlose Variabeln für die gesamte Laufzeit
@@ -119,17 +129,13 @@ function create() {
 			'dude2');
 
 	// Animationen für nach links, rechts gehen
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
 	player1.animations.add('walk1', [ 0, 1, 2], 10, true);
 	//player1.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
 
 	player2.animations.add('walk2', [ 0, 1, 2], 10, true);
 	//player2.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
     
-=======
->>>>>>> Stashed changes
+
 	/*
 	 * player1.animations.add('left', [ 0, 1, 2, 3 ], 10, true);
 	 * player1.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
@@ -137,10 +143,7 @@ function create() {
 	 * player2.animations.add('left', [ 0, 1, 2, 3 ], 10, true);
 	 * player2.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
 	 */
-<<<<<<< Updated upstream
-=======
->>>>>>> origin/master
->>>>>>> Stashed changes
+
 
 	// Stellt die Phsic beider Spieler ein, z.B. für Kollisionsberechnung
 	game.physics.arcade.enable(player1);
@@ -207,7 +210,6 @@ function create() {
 	boxes.setAll('checkWorldBounds', true);
 
 	// Power Up Walls
-
 	walls = game.add.physicsGroup(Phaser.Physics.ARCADE);
 	walls.createMultiple(10, 'wall1');
 	boxes.setAll('anchor.y', 0.5);
@@ -224,18 +226,25 @@ function create() {
 	for (var i = 0; i < 3; i++) {
 		var player1Lives = livesPlayer1.create(40 + (30 * i), 60, 'heart');
 		player1Lives.anchor.setTo(0.5, 0.5);
-	}
-
+	}  
+    
 	// Leben für Spieler 2
 	livesPlayer2 = game.add.group();
 
 	// Setzt die Bilder für das Leben nebeneinander
 	for (var i = 0; i < 3; i++) {
 
-		var player2Lives = livesPlayer2.create(game.world.width - 100
-				+ (30 * i), 60, 'heart');
+		var player2Lives = livesPlayer2.create(game.world.width - 100 + (30 * i), 60, 'heart');
 		player2Lives.anchor.setTo(0.5, 0.5);
 	}
+    
+    //Anzeige der Mauern
+    var wallPicture1;
+    var wallPicture2;
+    wallPicture1 = game.add.sprite(36 , 50, 'mauer');
+    wallPicture1.anchor.setTo(0.5,0.5);
+    wallPicture2 = game.add.sprite(-78, 50, 'mauer');
+    wallPicture2.anchor.setTo(0.5,0.5);
 
 	// Text nach Sieg eines Spielers und Anleitung für Restart
 	stateText = game.add.text(game.world.centerX, game.world.centerY, ' ', {
@@ -708,6 +717,53 @@ function restart() {
 	stateText.visible = false;
 
 }
+
+function showWalls(zahl1){
+    var wall
+    var zahl = zahl1;
+    if(zahl1 == 1){
+        var eins = game.add.sprite(18,50, 'eins');
+    }
+    if(zahl == 2){
+        var zwei = game.add.sprite(18,50, 'zwei');
+    }
+    if(zahl == 3){
+        var drei = game.add.sprite(18,50, 'drei');
+    }
+    if(zahl == 4){
+        var vier = game.add.sprite(18,50, 'vier');
+    }
+    if(zahl == 5){
+        var fünf = game.add.sprite(18,50, 'fünf');
+    }
+    if(zahl == 6){
+        var sechs = game.add.sprite(18,50, 'sechs');
+    }
+    if(zahl == 7){
+        var sieben = game.add.sprite(18,50, 'sieben');
+    }
+    if(zahl == 8){
+        var acht = game.add.sprite(18,50, 'acht');
+    }
+    if(zahl == 9){
+        var neun = game.add.sprite(18,50, 'neun');
+    }
+    if(zahl == 10){
+        var zehn = game.add.sprite(18,50, 'zehn');
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 function render() {
 	game.debug.body(hitbox1);

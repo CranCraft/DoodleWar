@@ -96,15 +96,14 @@ function create() {
 	// Startposition für die Spieler , und assets (Bilder für Bewegung...)
 	// gesetzt
 	player1 = game.add.sprite(32, game.world.height - 150, 'dude');
-	player2 = game.add.sprite(game.world.width - 64, game.world.height - 150,
-			'dude');
+	player2 = game.add.sprite(game.world.width - 64, game.world.height - 150,'dude');
 
 	// Animationen für nach links, rechts gehen
-	player1.animations.add('left', [ 0, 1, 2, 3 ], 10, true);
+	/*player1.animations.add('left', [ 0, 1, 2, 3 ], 10, true);
 	player1.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
 
 	player2.animations.add('left', [ 0, 1, 2, 3 ], 10, true);
-	player2.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
+	player2.animations.add('right', [ 5, 6, 7, 8 ], 10, true);*/
 
 	// Stellt die Phsic beider Spieler ein, z.B. für Kollisionsberechnung
 	game.physics.arcade.enable(player1);
@@ -257,21 +256,21 @@ function update() {
 			// Move to the left
 			player1.body.velocity.y = -150;
 
-			player1.animations.play('up');
+			player1.animations.play('dude');
 		} else if (sdownKey.isDown) {
 			// Move to the right
 			player1.body.velocity.y = 150;
 
-			player1.animations.play('down');
+			player1.animations.play('dude');
 		} else if (aleftKey.isDown) {
 			// Move to the right
 			player1.body.velocity.x = -150;
 
-			player1.animations.play('left');
+			player1.animations.play('dude');
 		} else if (drightKey.isDown) {
 			// Move to the right
 			player1.body.velocity.x = 150;
-			player1.animations.play('right');
+			player1.animations.play('dude');
 		} else {
 			// Stand still
 			player1.animations.stop();
@@ -284,22 +283,22 @@ function update() {
 			// Move to the left
 			player2.body.velocity.y = -150;
 
-			player2.animations.play('up');
+			player2.animations.play('dude');
 		} else if (cursors.down.isDown) {
 			// Move to the right
 			player2.body.velocity.y = 150;
 
-			player2.animations.play('down');
+			player2.animations.play('dude');
 		} else if (cursors.left.isDown) {
 			// Move to the right
 			player2.body.velocity.x = -150;
 
-			player2.animations.play('left');
+			player2.animations.play('dude');
 		} else if (cursors.right.isDown) {
 			// Move to the right
 			player2.body.velocity.x = 150;
 
-			player2.animations.play('right');
+			player2.animations.play('dude1');
 		} else {
 			// Stand still
 			player2.animations.stop();
@@ -476,9 +475,11 @@ function getOneWall(player){
     if(player == player1){
         wallMemory1 = wallMemory1+1;
         powerUpText1.setText("Du hast nun eine Mauer mehr");
+        game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
     }else{
         wallMemory2 = wallMemory2+1;
-        powerUpText2.setText("Du hast nun eine Mauer mehr");        
+        powerUpText2.setText("Du hast nun eine Mauer mehr");  
+        game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
     }
 }
 
@@ -502,8 +503,7 @@ function increaseBulletVelocity(Player){
 }
 
 function setBulletVelocityToStandard1(){
- 
-            bulletVelocity1 = 500;
+    bulletVelocity1 = 500;
 }
 
 function setBulletVelocityToStandard2(){
@@ -547,9 +547,11 @@ function dropWall(player) {
 		      console.log(wall.x, wall.y, player.position.x, player.position.y);
                 wallMemory1 = wallMemory1 - 1;
                 powerUpText1.setText("Du hast nun eine Mauer weniger");
+                game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
             }
         }else{
             powerUpText1.setText("Du hast keine Mauern mehr zum setzten");
+            game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
         }
 	}
 };

@@ -21,6 +21,7 @@ function preload() {
 	game.load.image('heart', 'assets/herz.png');
 	game.load.image('wall1', 'assets/mauer.png');
 	game.load.image('wall2', 'assets/mauer2.png');
+	game.load.image('blackPixel', 'assets/onePixel.png');
 }
 
 // Typlose Variabeln für die gesamte Laufzeit
@@ -29,8 +30,9 @@ function preload() {
 var line1;
 var line2;
 
-// Unsichtbare Mauer oben für die Lebensanzeige
+// Unsichtbare Mauer oben für die Lebensanzeige und das graue Feld dahinter
 var invisWall;
+var invisField;
 
 // Beide Spieler (Spieler 1 = Links, Spieler 2 = Rechts)
 var player1;
@@ -97,6 +99,12 @@ function create() {
 	invisWall.body.setSize(game.world.width, 1, 0, 100);
 	invisWall.body.immovable = true;
 
+	invisField = game.add.group();
+	invisField = game.add.sprite(0, 0, 'blackPixel');
+	invisField.scale.setTo(800, 100);
+	invisField.alpha = 0.2;
+
+
 	// Für die beiden Linienobjekte wird die Pysic angestellt damit eine
 	// Kollisionsbrechenung stattfinden kann
 	game.physics.enable(line1, Phaser.Physics.ARCADE);
@@ -113,17 +121,16 @@ function create() {
 	// gesetzt
 	player1 = game.add.group();
 	player1 = game.add.sprite(32, game.world.height - 150, 'dude');
-	player2 = game.add.sprite(game.world.width - 64, game.world.height - 150,
-			'dude2');
+	player2 = game.add.sprite(game.world.width - 64, game.world.height - 150, 'dude2');
 
 	// Animationen für nach links, rechts gehen
 	/*
-	 * player1.animations.add('left', [ 0, 1, 2, 3 ], 10, true);
-	 * player1.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
-	 * 
-	 * player2.animations.add('left', [ 0, 1, 2, 3 ], 10, true);
-	 * player2.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
-	 */
+	* player1.animations.add('left', [ 0, 1, 2, 3 ], 10, true);
+	* player1.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
+	*
+	* player2.animations.add('left', [ 0, 1, 2, 3 ], 10, true);
+	* player2.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
+	*/
 
 	// Stellt die Phsic beider Spieler ein, z.B. für Kollisionsberechnung
 	game.physics.arcade.enable(player1);
@@ -205,7 +212,7 @@ function create() {
 
 	// Setzt die Bilder für das Leben nebeneinander
 	for (var i = 0; i < 3; i++) {
-		var player1Lives = livesPlayer1.create(40 + (30 * i), 60, 'heart');
+		var player1Lives = livesPlayer1.create(18 + (30 * i), 26, 'heart');
 		player1Lives.anchor.setTo(0.5, 0.5);
 	}
 
@@ -215,8 +222,7 @@ function create() {
 	// Setzt die Bilder für das Leben nebeneinander
 	for (var i = 0; i < 3; i++) {
 
-		var player2Lives = livesPlayer2.create(game.world.width - 100
-				+ (30 * i), 60, 'heart');
+		var player2Lives = livesPlayer2.create(game.world.width - 78 + (30 * i), 26, 'heart');
 		player2Lives.anchor.setTo(0.5, 0.5);
 	}
 
@@ -276,20 +282,10 @@ function update() {
 	}
 
 	// Kolliosion der Spieler mit den Linien
-	if (game.physics.arcade.collide(player1, line1, null)
-			&& game.physics.arcade.collide(player2, line2, null)
-			&& game.physics.arcade.collide(player1, invisWall, null)
-			&& game.physics.arcade.collide(player2, invisWall, null)
-			&& game.physics.arcade.collide(player1, walls, null)
-			&& game.physics.arcade.collide(player2, walls, null)) {
+	if (game.physics.arcade.collide(player1, line1, null) && game.physics.arcade.collide(player2, line2, null) && game.physics.arcade.collide(player1, invisWall, null) && game.physics.arcade.collide(player2, invisWall, null) && game.physics.arcade.collide(player1, walls, null) && game.physics.arcade.collide(player2, walls, null)) {
 
 	}
-	if ((game.physics.arcade.collide(player2, line2, null)
-			|| game.physics.arcade.collide(player1, line1, null)
-			|| game.physics.arcade.collide(player2, invisWall, null)
-			|| game.physics.arcade.collide(player1, invisWall, null)
-			|| game.physics.arcade.collide(player1, walls, null) || game.physics.arcade
-			.collide(player2, walls, null))) {
+	if ((game.physics.arcade.collide(player2, line2, null) || game.physics.arcade.collide(player1, line1, null) || game.physics.arcade.collide(player2, invisWall, null) || game.physics.arcade.collide(player1, invisWall, null) || game.physics.arcade.collide(player1, walls, null) || game.physics.arcade.collide(player2, walls, null))) {
 
 	}
 
@@ -357,10 +353,8 @@ function update() {
 	}
 
 	// Wenn Kugel Spieler trifft dann führe playerXgotHit aus
-	game.physics.arcade.overlap(bulletsPlayer2, player1, player1gotHit, null,
-			this);
-	game.physics.arcade.overlap(bulletsPlayer1, player2, player2gotHit, null,
-			this);
+	game.physics.arcade.overlap(bulletsPlayer2, player1, player1gotHit, null, this);
+	game.physics.arcade.overlap(bulletsPlayer1, player2, player2gotHit, null, this);
 
 	// Wenn Kugel PowerUps trifft führe boxGotHit aus
 	game.physics.arcade.overlap(bulletsPlayer1, boxes, boxGotHit, null, this);
@@ -515,6 +509,7 @@ function player2gotHit(player, bullet) {
 	}
 
 }
+
 // Powerups:
 
 // der Mauerspeicher jeders Spielers wird erhöht
@@ -522,13 +517,11 @@ function getOneWall(player) {
 	if (player == player1) {
 		wallMemory1 = wallMemory1 + 1;
 		powerUpText1.setText("Du hast nun eine Mauer mehr");
-		game.time.events
-				.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
+		game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
 	} else {
 		wallMemory2 = wallMemory2 + 1;
 		powerUpText2.setText("Du hast nun eine Mauer mehr");
-		game.time.events
-				.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
+		game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
 	}
 }
 
@@ -538,18 +531,14 @@ function increaseBulletVelocity(Player) {
 	if (Player == player1) {
 		bulletVelocity1 = bulletVelocity1 / 2;
 		powerUpText1.setText("Du kannst nun schneller schießen");
-		game.time.events.add(Phaser.Timer.SECOND * 4,
-				setBulletVelocityToStandard1, this);
-		game.time.events
-				.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
+		game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard1, this);
+		game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
 
 	} else {
 		bulletVelocity2 = bulletVelocity2 / 2;
 		powerUpText2.setText("Du kannst nun schneller schießen");
-		game.time.events.add(Phaser.Timer.SECOND * 4,
-				setBulletVelocityToStandard2, this);
-		game.time.events
-				.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
+		game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard2, this);
+		game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
 
 	}
 }
@@ -568,16 +557,14 @@ function decreaseBulletVelocity(Player) {
 	if (Player == player1) {
 		bulletVelocity2 = bulletVelocity2 * 2;
 		powerUpText1.setText("Dein Gegner schießt nun langsamer");
-		game.time.events.add(Phaser.Timer.SECOND * 4,
-				setBulletVelocityToStandard2, this);
+		game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard2, this);
 		// game.time.events.add(Phaser.Timer.SECOND * 4, powerUpText2 = "",
 		// this);
 
 	} else {
 		bulletVelocity1 = bulletVelocity1 * 2;
 		powerUpText2.setText("Dein Gegner schießt nun langsamer");
-		game.time.events.add(Phaser.Timer.SECOND * 4,
-				setBulletVelocityToStandard1, this);
+		game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard1, this);
 		// game.time.events.add(Phaser.Timer.SECOND * 4, popUpText2 = "",
 		// this);
 
@@ -588,7 +575,8 @@ function checkOverlap() {
 
 	var check = false;
 
-	for (var i = 0, len = walls.children.length; i < len; i++) {
+	for (var i = 0,
+	    len = walls.children.length; i < len; i++) {
 		var boundsA = walls.children[i].getBounds();
 		console.log("Wall Position" + boundsA);
 		console.log("WorldPosition" + hitbox1.worldPosition);
@@ -602,23 +590,20 @@ function checkOverlap() {
 	}
 	return true;
 }
+
 // Funktion um die Schießgeschwindigkeit des Gegeners zu verlangsamen
 function decreaseBulletVelocity(Player) {
 	if (Player == player1) {
 		bulletVelocity2 = bulletVelocity2 * 2;
 		powerUpText1.setText("Dein Gegner schießt nun langsamer");
-		game.time.events.add(Phaser.Timer.SECOND * 4,
-				setBulletVelocityToStandard2, this);
-		game.time.events
-				.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
+		game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard2, this);
+		game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
 
 	} else {
 		bulletVelocity1 = bulletVelocity1 * 2;
 		powerUpText2.setText("Dein Gegner schießt nun langsamer");
-		game.time.events.add(Phaser.Timer.SECOND * 4,
-				setBulletVelocityToStandard1, this);
-		game.time.events
-				.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
+		game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard1, this);
+		game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
 
 	}
 }
@@ -626,6 +611,7 @@ function decreaseBulletVelocity(Player) {
 function setPowerUpText1Back() {
 	powerUpText1.setText("");
 }
+
 function setPowerUpText2Back() {
 	powerUpText2.setText("");
 }
@@ -641,12 +627,10 @@ function dropWall(player) {
 			//console.log(wall.x, wall.y, player.position.x, player.position.y);
 			wallMemory1 = wallMemory1 - 1;
 			powerUpText1.setText("Du hast nun eine Mauer weniger");
-			game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back,
-					this);
+			game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
 		} else {
 			powerUpText1.setText("Du hast keine Mauern mehr zum setzten");
-			game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back,
-					this);
+			game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
 		}
 	} else {
 		if (wallMemory2 > 0) {
@@ -658,12 +642,10 @@ function dropWall(player) {
 			//console.log(wall.x, wall.y, player.position.x, player.position.y);
 			wallMemory2 = wallMemory2 - 1;
 			powerUpText2.setText("Du hast nun eine Mauer weniger");
-			game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back,
-					this);
+			game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
 		} else {
 			powerUpText2.setText("Du hast keine Mauern mehr zum setzten");
-			game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back,
-					this);
+			game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
 		}
 	}
 }

@@ -141,7 +141,7 @@ function create() {
     boxes = game.add.group();
     boxes.enableBody = true;
     boxes.physicsBodyType = Phaser.Physics.ARCADE;
-    boxes.createMultiple(30,'box');
+    boxes.createMultiple(100,'box');
     boxes.setAll('anchor.x', 0, 5);
     boxes.setAll('anchor.y', 1);
     boxes.setAll('outOfBoundKill', true);
@@ -414,24 +414,27 @@ function increaseBulletVelocity(Player){
         if(Player == player1){
             bulletVelocity1 = bulletVelocity1/2;
             powerUpText1.setText("Du kannst nun schneller schießen");
-            game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard(player1), this);
+            t=game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard1, this);
             //game.time.events.add(Phaser.Timer.SECOND * 4, popUpText1 = "", this);
+            
 
         }else{
             bulletVelocity2 = bulletVelocity2/2;
             powerUpText2.setText("Du kannst nun schneller schießen");
-            game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard(player2), this);
+            game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard2, this);
             //game.time.events.add(Phaser.Timer.SECOND * 4, popUpText2 = "", this);
 
         }
 }
 
-function setBulletVelocityToStandard(Player){
-        if(Player == player1){    
+function setBulletVelocityToStandard1(){
+ 
             bulletVelocity1 = 500;
-        }else{
-            bulletVelocity2 = 500;
-        }
+}
+
+function setBulletVelocityToStandard2(){
+    bulletVelocity2 = 500;
+    
 }
 
 //Funktion um die Schießgeschwindigkeit des Gegeners zu verlangsamen
@@ -439,13 +442,13 @@ function decreaseBulletVelocity(Player){
     if(Player == player1){
             bulletVelocity2 = bulletVelocity2*2;
             powerUpText1.setText("Dein Gegner schießt nun langsamer");
-            game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard(player2), this);
+            game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard2, this);
             //game.time.events.add(Phaser.Timer.SECOND * 4, powerUpText2 = "", this);
 
     }else{
            bulletVelocity1 = bulletVelocity1*2;
            powerUpText2.setText("Dein Gegner schießt nun langsamer");
-           game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard(player1), this);
+           game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard1, this);
            //game.time.events.add(Phaser.Timer.SECOND * 4, popUpText2 = "", this);
 
         }

@@ -34,7 +34,9 @@ function preload() {
 	game.load.image('acht', 'assets/8.png');
 	game.load.image('neun', 'assets/9.png');
 	game.load.image('zehn', 'assets/10.png');
+	game.load.image('null', 'assets/1.png');
 	game.load.image('blackPixel', 'assets/onePixel.png');
+	game.load.image('wallx', 'assets/x.png');
 
 	//Sounds
 	game.load.audio('shotPlayerOne', 'assets/SoundEffects/Blaster-Imperial.wav');
@@ -253,44 +255,52 @@ function create() {
 	}
 
 	//Wall Icons
-	var wallDisplayLeft = game.add.sprite(36, 50, 'wall1');
-	var wallDisplayRight = game.add.sprite(36, 50, 'wall1');
+	var wallDisplayLeft = game.add.sprite(7, 50, 'wall1');
+	var wallDisplayXLeft = game.add.sprite(32, 53, 'wallx');
 	wallDisplayLeft.visible = true;
+	wallDisplayXLeft.visible = true;
+	
+	var wallDisplayRight = game.add.sprite(game.width - 22, 50, 'wall1');
+	var wallDisplayXRight = game.add.sprite(game.width - 60, 53, 'wallx');
 	wallDisplayRight.visible = true;
+	wallDisplayXRight.visible = true;
+	
 
 	//Anzeige der Mauern
 	for (var i = 0; i < 22; i++) {
 		wallDisplayArray[i] = 0;
 	}
 
-	wallDisplayArray[0] = game.add.sprite(36, 50, 'wall1');
-	wallDisplayArray[1] = game.add.sprite(36, 50, 'eins');
-	wallDisplayArray[2] = game.add.sprite(36, 50, 'zwei');
-	wallDisplayArray[3] = game.add.sprite(36, 50, 'drei');
-	wallDisplayArray[4] = game.add.sprite(36, 50, 'vier');
-	wallDisplayArray[5] = game.add.sprite(36, 50, 'fünf');
-	wallDisplayArray[6] = game.add.sprite(36, 50, 'sechs');
-	wallDisplayArray[7] = game.add.sprite(36, 50, 'sieben');
-	wallDisplayArray[8] = game.add.sprite(36, 50, 'acht');
-	wallDisplayArray[9] = game.add.sprite(36, 50, 'neun');
-	wallDisplayArray[10] = game.add.sprite(36, 50, 'zehn');
+	wallDisplayArray[0] = game.add.sprite(66, 53, 'null');
+	wallDisplayArray[1] = game.add.sprite(66, 53, 'eins');
+	wallDisplayArray[2] = game.add.sprite(66, 53, 'zwei');
+	wallDisplayArray[3] = game.add.sprite(66, 53, 'drei');
+	wallDisplayArray[4] = game.add.sprite(66, 53, 'vier');
+	wallDisplayArray[5] = game.add.sprite(66, 53, 'fünf');
+	wallDisplayArray[6] = game.add.sprite(66, 53, 'sechs');
+	wallDisplayArray[7] = game.add.sprite(66, 53, 'sieben');
+	wallDisplayArray[8] = game.add.sprite(66, 53, 'acht');
+	wallDisplayArray[9] = game.add.sprite(66, 53, 'neun');
+	wallDisplayArray[10] = game.add.sprite(66, 53, 'zehn');
 
-	wallDisplayArray[11] = game.add.sprite(36, 50, 'wall1');
-	wallDisplayArray[12] = game.add.sprite(36, 50, 'eins');
-	wallDisplayArray[13] = game.add.sprite(36, 50, 'zwei');
-	wallDisplayArray[14] = game.add.sprite(36, 50, 'drei');
-	wallDisplayArray[15] = game.add.sprite(36, 50, 'vier');
-	wallDisplayArray[16] = game.add.sprite(36, 50, 'fünf');
-	wallDisplayArray[17] = game.add.sprite(36, 50, 'sechs');
-	wallDisplayArray[18] = game.add.sprite(36, 50, 'sieben');
-	wallDisplayArray[19] = game.add.sprite(36, 50, 'acht');
-	wallDisplayArray[20] = game.add.sprite(36, 50, 'neun');
-	wallDisplayArray[21] = game.add.sprite(36, 50, 'zehn');
+	wallDisplayArray[11] = game.add.sprite(game.width - 94, 53, 'null');
+	wallDisplayArray[12] = game.add.sprite(game.width - 94, 53, 'eins');
+	wallDisplayArray[13] = game.add.sprite(game.width - 94, 53, 'zwei');
+	wallDisplayArray[14] = game.add.sprite(game.width - 94, 53, 'drei');
+	wallDisplayArray[15] = game.add.sprite(game.width - 94, 53, 'vier');
+	wallDisplayArray[16] = game.add.sprite(game.width - 94, 53, 'fünf');
+	wallDisplayArray[17] = game.add.sprite(game.width - 94, 53, 'sechs');
+	wallDisplayArray[18] = game.add.sprite(game.width - 94, 53, 'sieben');
+	wallDisplayArray[19] = game.add.sprite(game.width - 94, 53, 'acht');
+	wallDisplayArray[20] = game.add.sprite(game.width - 94, 53, 'neun');
+	wallDisplayArray[21] = game.add.sprite(game.width - 94, 53, 'zehn');
 
 	for (var i = 0; i < 22; i++) {
-		wallDisplayArray[i].anchor.setTo(0.5, 0.5);
-		wallDisplayArray[i].visible = true;
+		wallDisplayArray[i].visible = false;
 	}
+	wallDisplayArray[0].visible = true;
+	wallDisplayArray[11].visible = true;
+
 
 	// Text nach Sieg eines Spielers und Anleitung für Restart
 	stateText = game.add.text(game.world.centerX, game.world.centerY, ' ', {

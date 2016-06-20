@@ -245,9 +245,9 @@ function create() {
 	//Anzeige der Mauern
 	var wallPicture1;
 	var wallPicture2;
-	wallPicture1 = game.add.sprite(36, 50, 'mauer');
+	wallPicture1 = game.add.sprite(36, 50, 'wall1');
 	wallPicture1.anchor.setTo(0.5, 0.5);
-	wallPicture2 = game.add.sprite(-78, 50, 'mauer');
+	wallPicture2 = game.add.sprite(-78, 50, 'wall1');
 	wallPicture2.anchor.setTo(0.5, 0.5);
 
 	// Text nach Sieg eines Spielers und Anleitung für Restart
@@ -422,7 +422,8 @@ function dropBox() {
 		box.body.velocity.y = 250;
 
 		// Variable für die Geschwindigkeit in der geschossen werden kann
-		boxesTime = game.time.now + boxesVelocity;
+        var randomNumber = game.rnd.integerInRange(5, 10);
+		boxesTime = game.time.now + randomNumber*boxesVelocity;
 
 	}
 }

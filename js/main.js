@@ -357,6 +357,7 @@ function player1gotHit(player, bullet) {
 		//Setzt den Text visible
 		stateText.text = "Spieler 2 Gewinnt \n Klick für Neustart";
 		stateText.visible = true;
+		gameOn = 1;
 
 		//Wenn auf das Spiel geklickt wird startet das Spiel neu
 		game.input.onTap.addOnce(restart, this);

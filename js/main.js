@@ -14,7 +14,9 @@ function preload() {
 	game.load.image('lines', 'assets/platform.png');
 	game.load.image('star', 'assets/star.png');
 	game.load.spritesheet('dude', 'assets/dude1.png', 32, 48);
-	game.load.spritesheet('dude2', 'assets/dude2.png', 32, 48);
+    game.load.spritesheet('dude2', 'assets/dude2.png', 32, 48);
+    game.load.spritesheet('walk1', 'assets/dude1.png', 32, 48);
+    game.load.spritesheet('walk2', 'assets/dude2.png', 32, 48);
 	game.load.image('bullet1', 'assets/bullet1.png');
 	game.load.image('bullet2', 'assets/bullet2.png');
 	game.load.image('dropbox', 'assets/box.png');
@@ -117,6 +119,17 @@ function create() {
 			'dude2');
 
 	// Animationen für nach links, rechts gehen
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+	player1.animations.add('walk1', [ 0, 1, 2], 10, true);
+	//player1.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
+
+	player2.animations.add('walk2', [ 0, 1, 2], 10, true);
+	//player2.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
+    
+=======
+>>>>>>> Stashed changes
 	/*
 	 * player1.animations.add('left', [ 0, 1, 2, 3 ], 10, true);
 	 * player1.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
@@ -124,6 +137,10 @@ function create() {
 	 * player2.animations.add('left', [ 0, 1, 2, 3 ], 10, true);
 	 * player2.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
 	 */
+<<<<<<< Updated upstream
+=======
+>>>>>>> origin/master
+>>>>>>> Stashed changes
 
 	// Stellt die Phsic beider Spieler ein, z.B. für Kollisionsberechnung
 	game.physics.arcade.enable(player1);
@@ -416,9 +433,15 @@ function wallGotHit(bullet, wall) {
 		wall = game.add.sprite('wall2');
 	} else if (wall.type == 1) {
 		wall.kill();
+<<<<<<< Updated upstream
 
 	}
 
+=======
+
+	}
+
+>>>>>>> Stashed changes
 	bullet.kill();
 }
 

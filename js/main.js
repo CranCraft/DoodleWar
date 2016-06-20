@@ -395,7 +395,7 @@ function fireBulletPlayer1() {
 
 	if (game.time.now > bulletTime) {
 		bullet = bulletsPlayer1.getFirstExists(false);
-		bullet.reset(player1.x + 70, player1.y + 40);
+		bullet.reset(player1.x + 70, player1.y + 30);
 		bullet.body.velocity.x = 200;
 		// Variable für die Geschwindigkeit in der geschossen werden kann
 		bulletTime = game.time.now + bulletVelocity1;
@@ -407,7 +407,7 @@ function fireBulletPlayer2() {
 
 	if (game.time.now > bulletTime2) {
 		bullet = bulletsPlayer2.getFirstExists(false);
-		bullet.reset(player2.x - 70, player2.y + 40);
+		bullet.reset(player2.x - 70, player2.y + 30);
 		bullet.body.velocity.x = -200;
 		// Variable für die Geschwindigkeit in der geschossen werden kann
 		bulletTime2 = game.time.now + bulletVelocity2;

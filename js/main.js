@@ -10,10 +10,11 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-game', {
 // angegeben mit größen
 function preload() {
 
-	game.load.image('sky', 'assets/sky.png');
-	game.load.image('ground', 'assets/platform.png');
+	game.load.image('sky', 'assets/background.png');
+	game.load.image('lines', 'assets/platform.png');
 	game.load.image('star', 'assets/star.png');
 	game.load.spritesheet('dude', 'assets/dude1.png', 32, 48);
+    game.load.spritesheet('dude2', 'assets/dude2.png', 32, 48);
 	game.load.image('bullet1', 'assets/bullet1.png');
     game.load.image('bullet2', 'assets/bullet2.png');
 	game.load.image('box' , 'assets/box.png');
@@ -82,8 +83,8 @@ function create() {
 	// separieren. Dazu wird die gesamte Spielbreite durch
 	// 3 geteilt. Linie 1 wird an Stelle der (Spielbreite : 3) angelegt die
 	// linie 2 (Spielbreite : 3 * 2). Die Grafik heißt ground
-	line1 = game.add.sprite(game.world.width / 3, 0, 'ground');
-	line2 = game.add.sprite(2 * game.world.width / 3, 0, 'ground');
+	line1 = game.add.sprite(game.world.width / 3, 0, 'lines');
+	line2 = game.add.sprite(2 * game.world.width / 3, 0, 'lines');
 
 	invisWall = game.add.group();
 	invisWall.physicsBodyType = Phaser.Physics.ARCADE;
@@ -110,7 +111,7 @@ function create() {
 	// gesetzt
 	player1 = game.add.group();
 	player1 = game.add.sprite(32, game.world.height - 150, 'dude');
-	player2 = game.add.sprite(game.world.width - 64, game.world.height - 150,'dude');
+	player2 = game.add.sprite(game.world.width - 64, game.world.height - 150,'dude2');
 
 	// Animationen für nach links, rechts gehen
 	/*player1.animations.add('left', [ 0, 1, 2, 3 ], 10, true);
@@ -644,5 +645,5 @@ function restart() {
 function render() {
 	game.debug.body(hitbox1);
 	game.debug.body(player1);
-	game.debug.body(invisWall);
+	//game.debug.body(invisWall);
 }

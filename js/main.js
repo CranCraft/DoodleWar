@@ -34,7 +34,7 @@ function preload() {
 	game.load.image('acht', 'assets/8.png');
 	game.load.image('neun', 'assets/9.png');
 	game.load.image('zehn', 'assets/10.png');
-	game.load.image('null', 'assets/1.png');
+	game.load.image('null', 'assets/9.png');
 	game.load.image('blackPixel', 'assets/onePixel.png');
 	game.load.image('wallx', 'assets/x.png');
 
@@ -87,7 +87,8 @@ var boxesVelocity = 2500;
 var walls;
 var wallsVelocity = 0;
 var wallLive;
-var dropWallCheck = false;
+var dropWallCheckPlayer1 = false;
+var dropWallCheckPlayer2 = false;
 
 // Wall Speicher der einzelnen Spieler
 var wallMemory1 = 0;
@@ -352,22 +353,22 @@ function update() {
 			fireButtonCheckPlayer2 = false;
 		}
 
-		if (dropWall1.isDown && !dropWallCheck) {
-			dropWallCheck = true;
+		if (dropWall1.isDown && !dropWallCheckPlayer1) {
+			dropWallCheckPlayer1 = true;
 			dropWall(player1);
 		}
 
-		if (!dropWall1.isDown && dropWallCheck) {
-			dropWallCheck = false;
+		if (!dropWall1.isDown && dropWallCheckPlayer1) {
+			dropWallCheckPlayer1 = false;
 		}
 
-		if (dropWall2.isDown && !dropWallCheck) {
-			dropWallCheck = true;
+		if (dropWall2.isDown && !dropWallCheckPlayer2) {
+			dropWallCheckPlayer2 = true;
 			dropWall(player2);
 		}
 
-		if (!dropWall2.isDown && dropWallCheck) {
-			dropWallCheck = false;
+		if (!dropWall2.isDown && dropWallCheckPlayer2) {
+			dropWallCheckPlayer2 = false;
 		}
 	}
 
@@ -515,7 +516,7 @@ function boxGotHit(bullet, box) {
 	// Wenn die Kugel von Spieler ein
 	if (bullet.key == 'bullet1') {
 
-		var randomNumber = game.rnd.integerInRange(0, 2);
+		var randomNumber = game.rnd.integerInRange(2, 2);
 		switch (randomNumber) {
 		case 0:
 			increaseBulletVelocity(player1);
@@ -528,7 +529,7 @@ function boxGotHit(bullet, box) {
 			break;
 		}
 	} else {
-		var randomNumber = game.rnd.integerInRange(0, 2);
+		var randomNumber = game.rnd.integerInRange(2, 2);
 		switch (randomNumber) {
 		case 0:
 			increaseBulletVelocity(player2);
@@ -743,7 +744,6 @@ function dropWall(player) {
 		}
 	} else {
 		if (wallMemory2 > 0) {
-			console.log(wallMemory2);
 			wall = walls.getFirstExists(false);
 			wall.revive();
 			wall.x = player.position.x - 40;

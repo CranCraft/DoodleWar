@@ -19,7 +19,8 @@ function preload() {
     game.load.image('bullet2', 'assets/bullet2.png');
 	game.load.image('box' , 'assets/box.png');
     game.load.image('heart' , 'assets/herz.png');
-
+    game.load.image('wall1' , 'assets/mauer.png');
+    game.load.image('wall2' , 'assets/mauer2.png');
 }
 
 // Typlose Variabeln für die gesamte Laufzeit
@@ -119,6 +120,7 @@ function create() {
 
 	player2.animations.add('left', [ 0, 1, 2, 3 ], 10, true);
 	player2.animations.add('right', [ 5, 6, 7, 8 ], 10, true);*/
+    
 
 	// Stellt die Phsic beider Spieler ein, z.B. für Kollisionsberechnung
 	game.physics.arcade.enable(player1);
@@ -188,7 +190,7 @@ function create() {
 	walls = game.add.group();
 	walls.enableBody = true;
 	walls.physicsBodyType = Phaser.Physics.ARCADE;
-	walls.createMultiple(10, 'box');
+	walls.createMultiple(10, 'wall1');
 	walls.setAll('outOfBoundKill', true);
 	walls.setAll('checkWorldBounds', true);
 	walls.setAll('type', 2);
@@ -396,12 +398,10 @@ function dropBox() {
 function wallGotHit(bullet, wall){
     if(wall.type == 2){
         wall.type = 1;
-        console.log(wall.type);
-        //wall = game.add.sprite('star');
+        wall = game.add.sprite('wall2');
     }
     else if(wall.type == 1){
         wall.kill();
-        //wall = game.add.sprite('star');
 
     }
     
@@ -609,7 +609,6 @@ function dropWall(player) {
             if (player.position.x <= 300){
 		      wall = walls.getFirstExists(false);
 		      wall.revive();
-		      console.log(wall);
 		      wall.x = player.position.x + 40;
 		      wall.y = player.position.y;
 		      console.log(wall.x, wall.y, player.position.x, player.position.y);
@@ -621,7 +620,23 @@ function dropWall(player) {
             powerUpText1.setText("Du hast keine Mauern mehr zum setzten");
             game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
         }
-	}
+	}else{
+        if(wallMemory2 > 0){
+            if (player.position.x <= 300){
+		      wall = walls.getFirstExists(false);
+		      wall.revive();
+		      wall.x = player.position.x - 40;
+		      wall.y = player.position.y;
+		      console.log(wall.x, wall.y, player.position.x, player.position.y);
+                wallMemory1 = wallMemory2 - 1;
+                powerUpText2.setText("Du hast nun eine Mauer weniger");
+                game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
+            }
+        }else{
+            powerUpText2.setText("Du hast keine Mauern mehr zum setzten");
+            game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
+        }
+    }
 }
 
 // Wenn spiel neu gestartet wird

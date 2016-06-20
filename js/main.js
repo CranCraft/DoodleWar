@@ -435,9 +435,6 @@ function boxGotHit(bullet, box){
     box.kill(); 
 }
 
-	// Entfernt die Box die getroffen wurde
-	box.kill();
-}
 
 // Verhalten wenn Spieler 1 von einer Kugel getroffen wird
 function player1gotHit(player, bullet) {
@@ -579,7 +576,7 @@ function checkOverlap() {
 		}
 	}
 	return true;
-
+}
 	//Funktion um die Schießgeschwindigkeit des Gegeners zu verlangsamen
 function decreaseBulletVelocity(Player){
     if(Player == player1){
@@ -624,7 +621,7 @@ function dropWall(player) {
             game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
         }
 	}
-};
+}
 
 // Wenn spiel neu gestartet wird
 function restart() {

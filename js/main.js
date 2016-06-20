@@ -2,7 +2,8 @@
 var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-game', {
 	preload : preload,
 	create : create,
-	update : update
+	update : update,
+	render : render
 });
 
 // Hier werden die Bilder mit entsprechenden Variabeln geladen und wenn
@@ -14,9 +15,9 @@ function preload() {
 	game.load.image('star', 'assets/star.png');
 	game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
 	game.load.image('bullet1', 'assets/bullet1.png');
-    game.load.image('bullet2', 'assets/bullet2.png');
-	game.load.image('box' , 'assets/box.png');
-    game.load.image('heart' , 'assets/heart.png');
+	game.load.image('bullet2', 'assets/bullet2.png');
+	game.load.image('box', 'assets/box.png');
+	game.load.image('heart', 'assets/heart.png');
 
 }
 
@@ -26,9 +27,15 @@ function preload() {
 var line1;
 var line2;
 
+// Unsichtbare Mauer oben für die Lebensanzeige
+var invisWall;
+
 // Beide Spieler (Spieler 1 = Links, Spieler 2 = Rechts)
 var player1;
 var player2;
+
+// HitBox der Spieler
+var hitbox1;
 
 // Für die Zuweisung des Inputs der Pfeiltasten für Spieler 2
 var cursors;
@@ -51,15 +58,14 @@ var boxesTime = 0;
 var boxesVelocity = 2500;
 var walls;
 
-// Walls 
+// Walls
 var wallsVelocity = 0;
 var wallLive;
 var dropWallCheck = false;
 
-//Benachrichtungen zu den Spielern was passiert, z.B. PowerUps
+// Benachrichtungen zu den Spielern was passiert, z.B. PowerUps
 var popUpText1 = 0;
 var popUpText2 = 0;
-
 
 // Folgende Funktion wird zu beginn einmal ausgeführt und ersellt alle Objekte
 // für ein Spiel inklusive Spieler, Leben usw.
@@ -75,6 +81,13 @@ function create() {
 	line1 = game.add.sprite(game.world.width / 3, 0, 'ground');
 	line2 = game.add.sprite(2 * game.world.width / 3, 0, 'ground');
 
+	invisWall = game.add.group();
+	invisWall.physicsBodyType = Phaser.Physics.ARCADE;
+	invisWall.enableBody = true;
+	invisWall = invisWall.create(0, 0, null);
+	invisWall.body.setSize(game.world.width, 1, 0, 100);
+	invisWall.body.immovable = true;
+
 	// Für die beiden Linienobjekte wird die Pysic angestellt damit eine
 	// Kollisionsbrechenung stattfinden kann
 	game.physics.enable(line1, Phaser.Physics.ARCADE);
@@ -89,6 +102,7 @@ function create() {
 
 	// Startposition für die Spieler , und assets (Bilder für Bewegung...)
 	// gesetzt
+	player1 = game.add.group();
 	player1 = game.add.sprite(32, game.world.height - 150, 'dude');
 	player2 = game.add.sprite(game.world.width - 64, game.world.height - 150,
 			'dude');
@@ -107,6 +121,13 @@ function create() {
 	// Verhinder das Spieler aus dem Feld rausgehen können
 	player1.body.collideWorldBounds = true;
 	player2.body.collideWorldBounds = true;
+
+	// Spieler eins HitBox
+	hitboxes1 = game.add.group();
+	hitboxes1.enableBody = true;
+	player1.addChild(hitboxes1);
+	hitbox1 = hitboxes1.create(0, 0, null);
+	hitbox1.body.setSize(player1.width, player1.height, player1.width, 0);
 
 	// Steuerung des Spielers 2 mithilfe der Pfeiltasten
 	cursors = game.input.keyboard.createCursorKeys();
@@ -156,18 +177,17 @@ function create() {
 	boxes.setAll('anchor.y', 1);
 	boxes.setAll('outOfBoundKill', true);
 	boxes.setAll('checkWorldBounds', true);
-	
+
 	// Power Up Walls
 	walls = game.add.group();
 	walls.enableBody = true;
 	walls.physicsBodyType = Phaser.Physics.ARCADE;
-	walls.createMultiple(10, 'star');
+	walls.createMultiple(10, 'box');
 	walls.setAll('outOfBoundKill', true);
 	walls.setAll('checkWorldBounds', true);
 	walls.setAll('life', 3);
-    
 
-	//  Leben für Spieler 1 
+	// Leben für Spieler 1
 	livesPlayer1 = game.add.group();
 
 	// Setzt die Bilder für das Leben nebeneinander
@@ -182,7 +202,8 @@ function create() {
 	// Setzt die Bilder für das Leben nebeneinander
 	for (var i = 0; i < 3; i++) {
 
-		var player2Lives = livesPlayer2.create(game.world.width - 100 + (30 * i), 60, 'heart');
+		var player2Lives = livesPlayer2.create(game.world.width - 100
+				+ (30 * i), 60, 'heart');
 		player2Lives.anchor.setTo(0.5, 0.5);
 	}
 
@@ -193,11 +214,14 @@ function create() {
 	});
 	stateText.anchor.setTo(0.5, 0.5);
 	stateText.visible = false;
-    
-    //Text der Benachrichtigungen für die Spieler
-    style = { font: "15px Arial", fill: "black"};
-    powerUpText1 = this.game.add.text(game.width/3-155, 32, "", style);
-    powerUpText2 = this.game.add.text(2*game.width/3+15, 32, "", style);
+
+	// Text der Benachrichtigungen für die Spieler
+	style = {
+		font : "15px Arial",
+		fill : "black"
+	};
+	powerUpText1 = this.game.add.text(game.width / 3 - 155, 32, "", style);
+	powerUpText2 = this.game.add.text(2 * game.width / 3 + 15, 32, "", style);
 
 }
 
@@ -218,16 +242,16 @@ function update() {
 		if (fireButton2.isDown) {
 			fireBulletPlayer2();
 		}
-		
+
 		if (dropWall1.isDown && !dropWallCheck) {
-			dropWallCheck = true;	
+			dropWallCheck = true;
 			dropWall(player1);
 		}
-		
-		if (!dropWall1.isDown && dropWallCheck ) {
+
+		if (!dropWall1.isDown && dropWallCheck) {
 			dropWallCheck = false;
 		}
-		
+
 		if (dropWall2.isDown) {
 			dropWall(player2, player2.position.x, player2.position.y);
 		}
@@ -235,11 +259,15 @@ function update() {
 
 	// Kolliosion der Spieler mit den Linien
 	if (game.physics.arcade.collide(player1, line1, null)
-			&& game.physics.arcade.collide(player2, line2, null)) {
+			&& game.physics.arcade.collide(player2, line2, null)
+			&& game.physics.arcade.collide(player1, invisWall, null)
+			&& game.physics.arcade.collide(player2, invisWall, null)) {
 
 	}
-	if ((game.physics.arcade.collide(player2, line2, null) || game.physics.arcade
-			.collide(player1, line1, null))) {
+	if ((game.physics.arcade.collide(player2, line2, null)
+			|| game.physics.arcade.collide(player1, line1, null)
+			|| game.physics.arcade.collide(player2, invisWall, null) || game.physics.arcade
+			.collide(player1, invisWall, null))) {
 
 	}
 
@@ -354,33 +382,35 @@ function dropBox() {
 	}
 }
 
+// PowerUp-Treff-Funktion
+function boxGotHit(bullet, box) {
 
-//PowerUp-Treff-Funktion
-function boxGotHit(bullet, box){
-	
-    // Wenn die Kugel von Spieler ein
-    if(bullet.key == 'bullet1'){
-        
-        var randomNumber = game.rnd.integerInRange(0,1);
-        switch(randomNumber){
-            case 0: increaseBulletVelocity(player1);
-            case 1: decreaseBulletVelocity(player1);
-        }
-    }else{
-        var randomNumber = game.rnd.integerInRange(0,1);
-        switch(randomNumber){
-            case 0: increaseBulletVelocity(player2);
-            case 1: decreaseBulletVelocity(player2);
-        }  
-    }
-    
-    // Entfernt die Kugel die die Box getroffen hat
-    bullet.kill();
-    
-    // Entfernt die Box die getroffen wurde
-    box.kill(); 
+	// Wenn die Kugel von Spieler ein
+	if (bullet.key == 'bullet1') {
+
+		var randomNumber = game.rnd.integerInRange(0, 1);
+		switch (randomNumber) {
+		case 0:
+			increaseBulletVelocity(player1);
+		case 1:
+			decreaseBulletVelocity(player1);
+		}
+	} else {
+		var randomNumber = game.rnd.integerInRange(0, 1);
+		switch (randomNumber) {
+		case 0:
+			increaseBulletVelocity(player2);
+		case 1:
+			decreaseBulletVelocity(player2);
+		}
+	}
+
+	// Entfernt die Kugel die die Box getroffen hat
+	bullet.kill();
+
+	// Entfernt die Box die getroffen wurde
+	box.kill();
 }
-
 
 // Verhalten wenn Spieler 1 von einer Kugel getroffen wird
 function player1gotHit(player, bullet) {
@@ -442,61 +472,91 @@ function player2gotHit(player, bullet) {
 
 }
 
-//Funktion um die Schießgeschwindigkeit zu verändern
-function increaseBulletVelocity(Player){
-   
-        if(Player == player1){
-            bulletVelocity1 = bulletVelocity1/2;
-            powerUpText1.setText("Du kannst nun schneller schießen");
-            game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard1, this);
-            //game.time.events.add(Phaser.Timer.SECOND * 4, popUpText1 = "", this);
-            
+// Funktion um die Schießgeschwindigkeit zu verändern
+function increaseBulletVelocity(Player) {
 
-        }else{
-            bulletVelocity2 = bulletVelocity2/2;
-            powerUpText2.setText("Du kannst nun schneller schießen");
-            game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard2, this);
-            //game.time.events.add(Phaser.Timer.SECOND * 4, popUpText2 = "", this);
+	if (Player == player1) {
+		bulletVelocity1 = bulletVelocity1 / 2;
+		powerUpText1.setText("Du kannst nun schneller schießen");
+		game.time.events.add(Phaser.Timer.SECOND * 4,
+				setBulletVelocityToStandard1, this);
+		// game.time.events.add(Phaser.Timer.SECOND * 4, popUpText1 = "",
+		// this);
 
-        }
+	} else {
+		bulletVelocity2 = bulletVelocity2 / 2;
+		powerUpText2.setText("Du kannst nun schneller schießen");
+		game.time.events.add(Phaser.Timer.SECOND * 4,
+				setBulletVelocityToStandard2, this);
+		// game.time.events.add(Phaser.Timer.SECOND * 4, popUpText2 = "",
+		// this);
+
+	}
 }
 
-function setBulletVelocityToStandard1(){
- 
-            bulletVelocity1 = 500;
+function setBulletVelocityToStandard1() {
+
+	bulletVelocity1 = 500;
 }
 
-function setBulletVelocityToStandard2(){
-    bulletVelocity2 = 500;
-    
+function setBulletVelocityToStandard2() {
+	bulletVelocity2 = 500;
+
 }
 
-//Funktion um die Schießgeschwindigkeit des Gegeners zu verlangsamen
-function decreaseBulletVelocity(Player){
-    if(Player == player1){
-            bulletVelocity2 = bulletVelocity2*2;
-            powerUpText1.setText("Dein Gegner schießt nun langsamer");
-            game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard2, this);
-            //game.time.events.add(Phaser.Timer.SECOND * 4, powerUpText2 = "", this);
+// Funktion um die Schießgeschwindigkeit des Gegeners zu verlangsamen
+function decreaseBulletVelocity(Player) {
+	if (Player == player1) {
+		bulletVelocity2 = bulletVelocity2 * 2;
+		powerUpText1.setText("Dein Gegner schießt nun langsamer");
+		game.time.events.add(Phaser.Timer.SECOND * 4,
+				setBulletVelocityToStandard2, this);
+		// game.time.events.add(Phaser.Timer.SECOND * 4, powerUpText2 = "",
+		// this);
 
-    }else{
-           bulletVelocity1 = bulletVelocity1*2;
-           powerUpText2.setText("Dein Gegner schießt nun langsamer");
-           game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard1, this);
-           //game.time.events.add(Phaser.Timer.SECOND * 4, popUpText2 = "", this);
+	} else {
+		bulletVelocity1 = bulletVelocity1 * 2;
+		powerUpText2.setText("Dein Gegner schießt nun langsamer");
+		game.time.events.add(Phaser.Timer.SECOND * 4,
+				setBulletVelocityToStandard1, this);
+		// game.time.events.add(Phaser.Timer.SECOND * 4, popUpText2 = "",
+		// this);
 
-        }
+	}
+}
+
+function checkOverlap() {
+
+	var check = false;
+
+	for (var i = 0, len = walls.children.length; i < len; i++) {
+		var boundsA = walls.children[i].getBounds();
+		console.log("Wall Position" + boundsA);
+		console.log("WorldPosition" + hitbox1.worldPosition);
+		console.log("WorldPosition" + hitbox1);
+		check = game.physics.arcade.collide(hitbox1, boundsA);
+		console.log(check);
+		if (check == true) {
+			console.log("Fehler, hier steht schon eine Mauer	");
+			return false;
+		}
+	}
+	return true;
 }
 
 function dropWall(player) {
-	if (player.position.x <= 300){
+	if (player.position.x <= 300) {
 		wall = walls.getFirstExists(false);
-		wall.revive();
-		console.log(wall);
-		wall.x = player.position.x + 40;
-		wall.y = player.position.y;
-		console.log(wall.x, wall.y, player.position.x, player.position.y);
-	};
+		var check = checkOverlap();
+		console.log(check);
+		if (check) {
+			wall.revive();
+			console.log(wall);
+			wall.x = player.position.x + 40;
+			wall.y = player.position.y;
+			console.log(wall.x, wall.y, player.position.x, player.position.y);
+		}
+	}
 };
 
 // Wenn spiel neu gestartet wird
@@ -515,4 +575,10 @@ function restart() {
 	// hides the text
 	stateText.visible = false;
 
+}
+
+function render() {
+	game.debug.body(hitbox1);
+	game.debug.body(player1);
+	game.debug.body(invisWall);
 }

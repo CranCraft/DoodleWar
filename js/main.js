@@ -71,11 +71,11 @@ var gameOn = 0;
 
 // powerUps
 var boxes;
-var boxesTime = 0;
+var boxesTime = 1000;
 var boxesVelocity = 2500;
-var walls;
 
 // Walls
+var walls;
 var wallsVelocity = 0;
 var wallLive;
 var dropWallCheck = false;
@@ -260,7 +260,7 @@ function create() {
 	wallDisplayArray[8] = game.add.sprite(36, 50, 'acht');
 	wallDisplayArray[9] = game.add.sprite(36, 50, 'neun');
 	wallDisplayArray[10] = game.add.sprite(36, 50, 'zehn');
-	
+
 	wallDisplayArray[11] = game.add.sprite(36, 50, 'wall1');
 	wallDisplayArray[12] = game.add.sprite(36, 50, 'eins');
 	wallDisplayArray[13] = game.add.sprite(36, 50, 'zwei');
@@ -273,10 +273,9 @@ function create() {
 	wallDisplayArray[20] = game.add.sprite(36, 50, 'neun');
 	wallDisplayArray[21] = game.add.sprite(36, 50, 'zehn');
 
-
 	for (var i = 0; i < 22; i++) {
 		wallDisplayArray[i].anchor.setTo(0.5, 0.5);
-		wallDisplayArray[i].visible =  false;
+		wallDisplayArray[i].visible = false;
 	}
 
 	// Text nach Sieg eines Spielers und Anleitung für Restart
@@ -450,8 +449,8 @@ function dropBox() {
 		box.reset(1.5 * game.world.width / 3 - 6, 0);
 		box.body.velocity.y = 250;
 
-		// Variable für die Geschwindigkeit in der geschossen werden kann
-		var randomNumber = game.rnd.integerInRange(5, 10);
+		// Variable für die Geschwindigkeit in der die Box herunterfällt
+		var randomNumber = game.rnd.integerInRange(2, 6);
 		boxesTime = game.time.now + randomNumber * boxesVelocity;
 
 	}

@@ -71,11 +71,11 @@ var gameOn = 0;
 
 // powerUps
 var boxes;
-var boxesTime = 0;
+var boxesTime = 1000;
 var boxesVelocity = 2500;
-var walls;
 
 // Walls
+var walls;
 var wallsVelocity = 0;
 var wallLive;
 var dropWallCheck = false;
@@ -421,8 +421,8 @@ function dropBox() {
 		box.reset(1.5 * game.world.width / 3 - 6, 0);
 		box.body.velocity.y = 250;
 
-		// Variable für die Geschwindigkeit in der geschossen werden kann
-        var randomNumber = game.rnd.integerInRange(5, 10);
+		// Variable für die Geschwindigkeit in der die Box herunterfällt
+        var randomNumber = game.rnd.integerInRange(2, 6);
 		boxesTime = game.time.now + randomNumber*boxesVelocity;
 
 	}

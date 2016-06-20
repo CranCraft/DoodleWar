@@ -33,7 +33,7 @@ var player2;
 // Für die Zuweisung des Inputs der Pfeiltasten für Spieler 2
 var cursors;
 
-// Schießen Variablen (bullets für die Kollisonsbrechnung, bulletTime = ???,
+// Schießen Variablen (bullets für die Kollisonsbrechnung, bulletTime = wie oft die Kästen runterfallen,
 // fireButton für die auswahl des Schießenbuttons)
 var bullets;
 var bulletTime = 0;
@@ -55,6 +55,10 @@ var walls;
 var wallsVelocity = 0;
 var wallLive;
 var dropWallCheck = false;
+
+//Wall Speicher der einzelnen Spieler
+var wallMemory1 = 0;
+var wallMemory2 = 0;
 
 //Benachrichtungen zu den Spielern was passiert, z.B. PowerUps
 var popUpText1 = 0;
@@ -87,6 +91,8 @@ function create() {
 	game.physics.arcade.enable(line2);
 	line2.body.immovable = true;
 
+    
+    
 	// Startposition für die Spieler , und assets (Bilder für Bewegung...)
 	// gesetzt
 	player1 = game.add.sprite(32, game.world.height - 150, 'dude');
@@ -165,6 +171,8 @@ function create() {
 	walls.setAll('outOfBoundKill', true);
 	walls.setAll('checkWorldBounds', true);
 	walls.setAll('type', 2);
+    game.physics.arcade.enable(walls);
+
     
 
 	//  Leben für Spieler 1 
@@ -229,7 +237,7 @@ function update() {
 		}
 		
 		if (dropWall2.isDown) {
-			dropWall(player2, player2.position.x, player2.position.y);
+			dropWall(player2);
 		}
 	}
 
@@ -302,8 +310,9 @@ function update() {
 	}
 
 	// abwerfen der Boxes während das Spiel läuft
-	if (gameOn == 0)
+	if (gameOn == 0){
 		dropBox();
+    }
 
 	// Wenn Kugel Spieler trifft dann führe playerXgotHit aus
 	game.physics.arcade.overlap(bulletsPlayer2, player1, player1gotHit, null, this);
@@ -382,12 +391,14 @@ function boxGotHit(bullet, box){
         switch(randomNumber){
             case 0: increaseBulletVelocity(player1);
             case 1: decreaseBulletVelocity(player1);
+            case 2: getOneWall(player1);
         }
     }else{
         var randomNumber = game.rnd.integerInRange(0,1);
         switch(randomNumber){
             case 0: increaseBulletVelocity(player2);
             case 1: decreaseBulletVelocity(player2);
+            case 2: getOneWall(player2);
         }  
     }
     
@@ -458,6 +469,18 @@ function player2gotHit(player, bullet) {
 	}
 
 }
+//Powerups:
+
+//der Mauerspeicher jeders Spielers wird erhöht
+function getOneWall(player){
+    if(player == player1){
+        wallMemory1 = wallMemory1+1;
+        powerUpText1.setText("Du hast nun eine Mauer mehr");
+    }else{
+        wallMemory2 = wallMemory2+1;
+        powerUpText2.setText("Du hast nun eine Mauer mehr");        
+    }
+}
 
 //Funktion um die Schießgeschwindigkeit zu verändern
 function increaseBulletVelocity(Player){
@@ -466,14 +489,14 @@ function increaseBulletVelocity(Player){
             bulletVelocity1 = bulletVelocity1/2;
             powerUpText1.setText("Du kannst nun schneller schießen");
             game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard1, this);
-            //game.time.events.add(Phaser.Timer.SECOND * 4, popUpText1 = "", this);
+            game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
             
 
         }else{
             bulletVelocity2 = bulletVelocity2/2;
             powerUpText2.setText("Du kannst nun schneller schießen");
             game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard2, this);
-            //game.time.events.add(Phaser.Timer.SECOND * 4, popUpText2 = "", this);
+            game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
 
         }
 }
@@ -494,26 +517,41 @@ function decreaseBulletVelocity(Player){
             bulletVelocity2 = bulletVelocity2*2;
             powerUpText1.setText("Dein Gegner schießt nun langsamer");
             game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard2, this);
-            //game.time.events.add(Phaser.Timer.SECOND * 4, powerUpText2 = "", this);
+            game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
 
     }else{
            bulletVelocity1 = bulletVelocity1*2;
            powerUpText2.setText("Dein Gegner schießt nun langsamer");
            game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard1, this);
-           //game.time.events.add(Phaser.Timer.SECOND * 4, popUpText2 = "", this);
+           game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
 
         }
 }
 
+function setPowerUpText1Back(){
+    powerUpText1.setText("");
+}
+function setPopUpText2Back(){
+    powerUpText2.setText("");
+}
+
 function dropWall(player) {
-	if (player.position.x <= 300){
-		wall = walls.getFirstExists(false);
-		wall.revive();
-		console.log(wall);
-		wall.x = player.position.x + 40;
-		wall.y = player.position.y;
-		console.log(wall.x, wall.y, player.position.x, player.position.y);
-	};
+    if(player == player1){
+        if(wallMemory1 > 0){
+            if (player.position.x <= 300){
+		      wall = walls.getFirstExists(false);
+		      wall.revive();
+		      console.log(wall);
+		      wall.x = player.position.x + 40;
+		      wall.y = player.position.y;
+		      console.log(wall.x, wall.y, player.position.x, player.position.y);
+                wallMemory1 = wallMemory1 - 1;
+                powerUpText1.setText("Du hast nun eine Mauer weniger");
+            }
+        }else{
+            powerUpText1.setText("Du hast keine Mauern mehr zum setzten");
+        }
+	}
 };
 
 // Wenn spiel neu gestartet wird

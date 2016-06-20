@@ -10,6 +10,7 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-game', {
 // angegeben mit größen
 function preload() {
 
+	//Bilder
 	game.load.image('sky', 'assets/background.png');
 	game.load.image('lines', 'assets/platform.png');
 	game.load.image('star', 'assets/star.png');
@@ -34,6 +35,10 @@ function preload() {
 	game.load.image('neun', 'assets/9.png');
 	game.load.image('zehn', 'assets/10.png');
 	game.load.image('blackPixel', 'assets/onePixel.png');
+	
+	//Sounds
+	game.load.audio('shotPlayerOne', 'assets/SoundEffects/Blaster-Imperial.wav');
+	game.load.audio('shotPlayerTwo', 'assets/SoundEffects/Blaster-Droideka.wav');
 }
 
 // Typlose Variabeln für die gesamte Laufzeit
@@ -63,6 +68,8 @@ var bullets;
 var bulletTime = 0;
 var bulletTime2 = 0;
 var fireButton;
+var fireButtonCheckPlayer1 = false;
+var fireButtonCheckPlayer2 = false;
 var bulletVelocity1 = 500;
 var bulletVelocity2 = 500;
 
@@ -242,7 +249,11 @@ function create() {
 		player2Lives.anchor.setTo(0.5, 0.5);
 	}
 
-	var wallDisplayArray = new Array();
+	//Wall Icons
+	var wallDisplayLeft = game.add.sprite(36, 50, 'wall1');
+	var wallDisplayRight = game.add.sprite(36, 50, 'wall1');
+	wallDisplayLeft.visible = true;
+	wallDisplayRight.visible = true;
 
 	//Anzeige der Mauern
 	for (var i = 0; i < 22; i++) {
@@ -275,7 +286,7 @@ function create() {
 
 	for (var i = 0; i < 22; i++) {
 		wallDisplayArray[i].anchor.setTo(0.5, 0.5);
-		wallDisplayArray[i].visible = false;
+		wallDisplayArray[i].visible = true;
 	}
 
 	// Text nach Sieg eines Spielers und Anleitung für Restart
@@ -293,7 +304,11 @@ function create() {
 	};
 	powerUpText1 = this.game.add.text(game.width / 3 - 155, 32, "", style);
 	powerUpText2 = this.game.add.text(2 * game.width / 3 + 15, 32, "", style);
-
+	
+	//Sounds
+	shotPlayerOne = game.add.audio('shotPlayerOne');
+	shotPlayerTwo = game.add.audio('shotPlayerTwo');
+	
 }
 
 // Hier ist alles drinne was durchgehend geprüft werden muss
@@ -306,12 +321,22 @@ function update() {
 	player2.body.velocity.y = 0;
 
 	if (gameOn == 0) {
-		if (fireButton1.isDown) {
+		if (fireButton1.isDown && !fireButtonCheckPlayer1) {
+			fireButtonCheck = true;
 			fireBulletPlayer1();
 		}
-
-		if (fireButton2.isDown) {
+		
+		if (!fireButton1.isDown && fireButtonCheckPlayer1) {
+			fireButtonCheckPlayer1 = false;
+		}
+		
+		if (fireButton2.isDown && !fireButtonCheckPlayer2) {
+			fireButtonCheck = true;
 			fireBulletPlayer2();
+		}
+		
+		if (!fireButton2.isDown && fireButtonCheckPlayer2) {
+			fireButtonCheckPlayer2 = false;
 		}
 
 		if (dropWall1.isDown && !dropWallCheck) {
@@ -427,6 +452,7 @@ function fireBulletPlayer1() {
 		bullet.body.velocity.x = 200;
 		// Variable für die Geschwindigkeit in der geschossen werden kann
 		bulletTime = game.time.now + bulletVelocity1;
+		shotPlayerOne.play();
 	}
 }
 
@@ -439,6 +465,7 @@ function fireBulletPlayer2() {
 		bullet.body.velocity.x = -200;
 		// Variable für die Geschwindigkeit in der geschossen werden kann
 		bulletTime2 = game.time.now + bulletVelocity2;
+		shotPlayerTwo.play();
 	}
 }
 
@@ -757,7 +784,7 @@ function showWalls(zahl1) {
 }
 
 function render() {
-	game.debug.body(hitbox1);
-	game.debug.body(player1);
+	//game.debug.body(hitbox1);
+	//game.debug.body(player1);
 	// game.debug.body(invisWall);
 }

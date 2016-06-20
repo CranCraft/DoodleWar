@@ -313,8 +313,14 @@ if(game.time.now > boxesTime){
 
 //PowerUp-Treff-Funktion
 function boxGotHit(bullet, box){
+	
+	// Entfernt die Kugel die die Box getroffen hat
     bullet.kill();
+    
+    // Entfernt die Box die getroffen wurde
     box.kill();
+    
+    // Wenn die Kugel von Spieler ein
     if(bullet.key == 'bullet1'){    
         var randomNumber = game.rnd.integerInRange(0,1);
         switch(randomNumber){
@@ -357,7 +363,7 @@ function player1gotHit(player, bullet) {
 		//Setzt den Text visible
 		stateText.text = "Spieler 2 Gewinnt \n Klick für Neustart";
 		stateText.visible = true;
-		gameOn = 1;
+		gameOn = 1;	
 
 		//Wenn auf das Spiel geklickt wird startet das Spiel neu
 		game.input.onTap.addOnce(restart, this);

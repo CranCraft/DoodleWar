@@ -164,7 +164,7 @@ function create() {
 	walls.createMultiple(10, 'star');
 	walls.setAll('outOfBoundKill', true);
 	walls.setAll('checkWorldBounds', true);
-	walls.setAll('lifes', 3);
+	walls.setAll('type', 2);
     
 
 	//  Leben für Spieler 1 
@@ -358,21 +358,13 @@ function dropBox() {
 
 //lässt die Mauer schwächer werden, hält nur drei Schuss aus
 function wallGotHit(bullet, wall){
-    console.log(wall.lifes);
-    if(wall.property.lifes == 3){
-        console.log(wall.lifes);
-        wall.lifes = 2;
-        console.log(wall.lifes);
+    if(wall.type == 2){
+        wall.type = 1;
+        console.log(wall.type);
         //wall = game.add.sprite('star');
     }
-    if(wall.lifes == 2){
-        console.log(wall.lifes);
-        wall.lifes = 1;
-        console.log(wall.lifes);
-        //wall = game.add.sprite('star');
-    }
-    if(wall.lifes == 1){
-        console.log(wall.lifes);
+    else if(wall.type == 1){
+        console.log(wall.type);
         wall.kill();
     }
     

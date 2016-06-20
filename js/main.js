@@ -242,13 +242,42 @@ function create() {
 		player2Lives.anchor.setTo(0.5, 0.5);
 	}
 
+	var wallDisplayArray = new Array();
+
 	//Anzeige der Mauern
-	var wallPicture1;
-	var wallPicture2;
-	wallPicture1 = game.add.sprite(36, 50, 'wall1');
-	wallPicture1.anchor.setTo(0.5, 0.5);
-	wallPicture2 = game.add.sprite(-78, 50, 'wall1');
-	wallPicture2.anchor.setTo(0.5, 0.5);
+	for (var i = 0; i < 22; i++) {
+		wallDisplayArray[i] = 0;
+	}
+
+	wallDisplayArray[0] = game.add.sprite(36, 50, 'wall1');
+	wallDisplayArray[1] = game.add.sprite(36, 50, 'eins');
+	wallDisplayArray[2] = game.add.sprite(36, 50, 'zwei');
+	wallDisplayArray[3] = game.add.sprite(36, 50, 'drei');
+	wallDisplayArray[4] = game.add.sprite(36, 50, 'vier');
+	wallDisplayArray[5] = game.add.sprite(36, 50, 'fünf');
+	wallDisplayArray[6] = game.add.sprite(36, 50, 'sechs');
+	wallDisplayArray[7] = game.add.sprite(36, 50, 'sieben');
+	wallDisplayArray[8] = game.add.sprite(36, 50, 'acht');
+	wallDisplayArray[9] = game.add.sprite(36, 50, 'neun');
+	wallDisplayArray[10] = game.add.sprite(36, 50, 'zehn');
+	
+	wallDisplayArray[11] = game.add.sprite(36, 50, 'wall1');
+	wallDisplayArray[12] = game.add.sprite(36, 50, 'eins');
+	wallDisplayArray[13] = game.add.sprite(36, 50, 'zwei');
+	wallDisplayArray[14] = game.add.sprite(36, 50, 'drei');
+	wallDisplayArray[15] = game.add.sprite(36, 50, 'vier');
+	wallDisplayArray[16] = game.add.sprite(36, 50, 'fünf');
+	wallDisplayArray[17] = game.add.sprite(36, 50, 'sechs');
+	wallDisplayArray[18] = game.add.sprite(36, 50, 'sieben');
+	wallDisplayArray[19] = game.add.sprite(36, 50, 'acht');
+	wallDisplayArray[20] = game.add.sprite(36, 50, 'neun');
+	wallDisplayArray[21] = game.add.sprite(36, 50, 'zehn');
+
+
+	for (var i = 0; i < 22; i++) {
+		wallDisplayArray[i].anchor.setTo(0.5, 0.5);
+		wallDisplayArray[i].visible =  false;
+	}
 
 	// Text nach Sieg eines Spielers und Anleitung für Restart
 	stateText = game.add.text(game.world.centerX, game.world.centerY, ' ', {
@@ -422,8 +451,8 @@ function dropBox() {
 		box.body.velocity.y = 250;
 
 		// Variable für die Geschwindigkeit in der geschossen werden kann
-        var randomNumber = game.rnd.integerInRange(5, 10);
-		boxesTime = game.time.now + randomNumber*boxesVelocity;
+		var randomNumber = game.rnd.integerInRange(5, 10);
+		boxesTime = game.time.now + randomNumber * boxesVelocity;
 
 	}
 }

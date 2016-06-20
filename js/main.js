@@ -184,14 +184,15 @@ function create() {
 	boxes.setAll('checkWorldBounds', true);
 
 	// Power Up Walls
-	walls = game.add.physicsGroup(Phaser.Physics.ARCADE);
+	walls = game.add.group();
+	walls.enableBody = true;
+	walls.physicsBodyType = Phaser.Physics.ARCADE;
 	walls.createMultiple(10, 'box');
 	walls.setAll('outOfBoundKill', true);
 	walls.setAll('checkWorldBounds', true);
 	walls.setAll('type', 2);
-	walls.setAll('enableBody', true);
-	walls.setAll('body.immovable', true);
-	
+    game.physics.arcade.enable(walls);
+
 	// Leben für Spieler 1
 	livesPlayer1 = game.add.group();
 
@@ -266,17 +267,13 @@ function update() {
 	if (game.physics.arcade.collide(player1, line1, null)
 			&& game.physics.arcade.collide(player2, line2, null)
 			&& game.physics.arcade.collide(player1, invisWall, null)
-			&& game.physics.arcade.collide(player2, invisWall, null)
-			&& game.physics.arcade.collide(player1, walls, null)
-			&& game.physics.arcade.collide(player2, walls, null)) {
+			&& game.physics.arcade.collide(player2, invisWall, null)) {
 
 	}
 	if ((game.physics.arcade.collide(player2, line2, null)
 			|| game.physics.arcade.collide(player1, line1, null)
-			|| game.physics.arcade.collide(player2, invisWall, null) 
-			|| game.physics.arcade.collide(player1, invisWall, null)
-			|| game.physics.arcade.collide(player1, walls, null)
-			|| game.physics.arcade.collide(player2, walls, null))) {
+			|| game.physics.arcade.collide(player2, invisWall, null) || game.physics.arcade
+			.collide(player1, invisWall, null))) {
 
 	}
 

@@ -35,7 +35,7 @@ function preload() {
 	game.load.image('neun', 'assets/9.png');
 	game.load.image('zehn', 'assets/10.png');
 	game.load.image('blackPixel', 'assets/onePixel.png');
-	
+
 	//Sounds
 	game.load.audio('shotPlayerOne', 'assets/SoundEffects/Blaster-Imperial.wav');
 	game.load.audio('shotPlayerTwo', 'assets/SoundEffects/Blaster-Droideka.wav');
@@ -90,6 +90,9 @@ var dropWallCheck = false;
 // Wall Speicher der einzelnen Spieler
 var wallMemory1 = 0;
 var wallMemory2 = 0;
+
+// Array für die Zahlen der Walls
+var wallDisplayArray = new Array();
 
 // Benachrichtungen zu den Spielern was passiert, z.B. PowerUps
 var popUpText1 = 0;
@@ -304,11 +307,11 @@ function create() {
 	};
 	powerUpText1 = this.game.add.text(game.width / 3 - 155, 32, "", style);
 	powerUpText2 = this.game.add.text(2 * game.width / 3 + 15, 32, "", style);
-	
+
 	//Sounds
 	shotPlayerOne = game.add.audio('shotPlayerOne');
 	shotPlayerTwo = game.add.audio('shotPlayerTwo');
-	
+
 }
 
 // Hier ist alles drinne was durchgehend geprüft werden muss
@@ -325,16 +328,16 @@ function update() {
 			fireButtonCheck = true;
 			fireBulletPlayer1();
 		}
-		
+
 		if (!fireButton1.isDown && fireButtonCheckPlayer1) {
 			fireButtonCheckPlayer1 = false;
 		}
-		
+
 		if (fireButton2.isDown && !fireButtonCheckPlayer2) {
 			fireButtonCheck = true;
 			fireBulletPlayer2();
 		}
-		
+
 		if (!fireButton2.isDown && fireButtonCheckPlayer2) {
 			fireButtonCheckPlayer2 = false;
 		}
@@ -502,24 +505,30 @@ function boxGotHit(bullet, box) {
 	// Wenn die Kugel von Spieler ein
 	if (bullet.key == 'bullet1') {
 
-		var randomNumber = game.rnd.integerInRange(0, 1);
+		var randomNumber = game.rnd.integerInRange(0, 2);
 		switch (randomNumber) {
 		case 0:
 			increaseBulletVelocity(player1);
+			break;
 		case 1:
 			decreaseBulletVelocity(player1);
+			break;
 		case 2:
 			getOneWall(player1);
+			break;
 		}
 	} else {
-		var randomNumber = game.rnd.integerInRange(0, 1);
+		var randomNumber = game.rnd.integerInRange(0, 2);
 		switch (randomNumber) {
 		case 0:
 			increaseBulletVelocity(player2);
+			break;
 		case 1:
 			decreaseBulletVelocity(player2);
+			break;
 		case 2:
 			getOneWall(player2);
+			break;
 		}
 	}
 
@@ -595,11 +604,17 @@ function player2gotHit(player, bullet) {
 // der Mauerspeicher jeders Spielers wird erhöht
 function getOneWall(player) {
 	if (player == player1) {
+		wallDisplayArray[wallMemory1].visible = false;
 		wallMemory1 = wallMemory1 + 1;
+		wallDisplayArray[wallMemory1].visible = true;
+
 		powerUpText1.setText("Du hast nun eine Mauer mehr");
 		game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
 	} else {
+		wallDisplayArray[wallMemory1 + 11].visible = false;
 		wallMemory2 = wallMemory2 + 1;
+		wallDisplayArray[wallMemory1 + 11].visible = true;
+
 		powerUpText2.setText("Du hast nun eine Mauer mehr");
 		game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
 	}
@@ -705,7 +720,11 @@ function dropWall(player) {
 			wall.x = player.position.x + 40;
 			wall.y = player.position.y;
 			//console.log(wall.x, wall.y, player.position.x, player.position.y);
+
+			wallDisplayArray[wallMemory1].visible = false;
 			wallMemory1 = wallMemory1 - 1;
+			wallDisplayArray[wallMemory1].visible = true;
+
 			powerUpText1.setText("Du hast nun eine Mauer weniger");
 			game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
 		} else {
@@ -720,7 +739,11 @@ function dropWall(player) {
 			wall.x = player.position.x - 40;
 			wall.y = player.position.y;
 			//console.log(wall.x, wall.y, player.position.x, player.position.y);
+
+			wallDisplayArray[wallMemory2 + 11].visible = false;
 			wallMemory2 = wallMemory2 - 1;
+			wallDisplayArray[wallMemory2 + 11].visible = true;
+
 			powerUpText2.setText("Du hast nun eine Mauer weniger");
 			game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
 		} else {

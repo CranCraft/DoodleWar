@@ -621,9 +621,9 @@ function getOneWall(player) {
 		powerUpText1.setText("Du hast nun eine Mauer mehr");
 		game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
 	} else {
-		wallDisplayArray[wallMemory1 + 11].visible = false;
+		wallDisplayArray[wallMemory2 + 11].visible = false;
 		wallMemory2 = wallMemory2 + 1;
-		wallDisplayArray[wallMemory1 + 11].visible = true;
+		wallDisplayArray[wallMemory2 + 11].visible = true;
 
 		powerUpText2.setText("Du hast nun eine Mauer mehr");
 		game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
@@ -781,40 +781,6 @@ function restart() {
 
 }
 
-function showWalls(zahl1) {
-	var wall;
-	var zahl = zahl1;
-	if (zahl1 == 1) {
-		var eins = game.add.sprite(18, 50, 'eins');
-	}
-	if (zahl == 2) {
-		var zwei = game.add.sprite(18, 50, 'zwei');
-	}
-	if (zahl == 3) {
-		var drei = game.add.sprite(18, 50, 'drei');
-	}
-	if (zahl == 4) {
-		var vier = game.add.sprite(18, 50, 'vier');
-	}
-	if (zahl == 5) {
-		var fünf = game.add.sprite(18, 50, 'fünf');
-	}
-	if (zahl == 6) {
-		var sechs = game.add.sprite(18, 50, 'sechs');
-	}
-	if (zahl == 7) {
-		var sieben = game.add.sprite(18, 50, 'sieben');
-	}
-	if (zahl == 8) {
-		var acht = game.add.sprite(18, 50, 'acht');
-	}
-	if (zahl == 9) {
-		var neun = game.add.sprite(18, 50, 'neun');
-	}
-	if (zahl == 10) {
-		var zehn = game.add.sprite(18, 50, 'zehn');
-	}
-}
 
 function render() {
 	//game.debug.body(hitbox1);

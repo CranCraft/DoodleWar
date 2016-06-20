@@ -164,7 +164,7 @@ function create() {
 	walls.createMultiple(10, 'star');
 	walls.setAll('outOfBoundKill', true);
 	walls.setAll('checkWorldBounds', true);
-	walls.setAll('life', 3);
+	walls.setAll('lifes', 3);
     
 
 	//  Leben für Spieler 1 
@@ -306,14 +306,16 @@ function update() {
 		dropBox();
 
 	// Wenn Kugel Spieler trifft dann führe playerXgotHit aus
-	game.physics.arcade.overlap(bulletsPlayer2, player1, player1gotHit, null,
-			this);
-	game.physics.arcade.overlap(bulletsPlayer1, player2, player2gotHit, null,
-			this);
-
+	game.physics.arcade.overlap(bulletsPlayer2, player1, player1gotHit, null, this);
+	game.physics.arcade.overlap(bulletsPlayer1, player2, player2gotHit, null, this);
+    
 	// Wenn Kugel PowerUps trifft führe boxGotHit aus
 	game.physics.arcade.overlap(bulletsPlayer1, boxes, boxGotHit, null, this);
 	game.physics.arcade.overlap(bulletsPlayer2, boxes, boxGotHit, null, this);
+    
+    //Wenn Kugel Mauer trifft
+    game.physics.arcade.overlap(bulletsPlayer1, walls, wallGotHit, null, this);
+	game.physics.arcade.overlap(bulletsPlayer2, walls, wallGotHit, null, this);
 
 }
 
@@ -341,7 +343,7 @@ function fireBulletPlayer2() {
 	}
 }
 
-// lässt die Box regelmäßig runterfallen, gleich wie Schieffunktion
+// lässt die Box regelmäßig runterfallen, gleich wie Schiesfunktion
 function dropBox() {
 	if (game.time.now > boxesTime) {
 		box = boxes.getFirstExists(false);
@@ -354,6 +356,28 @@ function dropBox() {
 	}
 }
 
+//lässt die Mauer schwächer werden, hält nur drei Schuss aus
+function wallGotHit(bullet, wall){
+    console.log(wall.lifes);
+    if(wall.property.lifes == 3){
+        console.log(wall.lifes);
+        wall.lifes = 2;
+        console.log(wall.lifes);
+        //wall = game.add.sprite('star');
+    }
+    if(wall.lifes == 2){
+        console.log(wall.lifes);
+        wall.lifes = 1;
+        console.log(wall.lifes);
+        //wall = game.add.sprite('star');
+    }
+    if(wall.lifes == 1){
+        console.log(wall.lifes);
+        wall.kill();
+    }
+    
+    bullet.kill();
+}
 
 //PowerUp-Treff-Funktion
 function boxGotHit(bullet, box){

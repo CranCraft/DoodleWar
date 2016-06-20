@@ -14,13 +14,13 @@ function preload() {
 	game.load.image('lines', 'assets/platform.png');
 	game.load.image('star', 'assets/star.png');
 	game.load.spritesheet('dude', 'assets/dude1.png', 32, 48);
-    game.load.spritesheet('dude2', 'assets/dude2.png', 32, 48);
+	game.load.spritesheet('dude2', 'assets/dude2.png', 32, 48);
 	game.load.image('bullet1', 'assets/bullet1.png');
-    game.load.image('bullet2', 'assets/bullet2.png');
-	game.load.image('dropbox' , 'assets/box.png');
-    game.load.image('heart' , 'assets/herz.png');
-    game.load.image('wall1' , 'assets/mauer.png');
-    game.load.image('wall2' , 'assets/mauer2.png');
+	game.load.image('bullet2', 'assets/bullet2.png');
+	game.load.image('dropbox', 'assets/box.png');
+	game.load.image('heart', 'assets/herz.png');
+	game.load.image('wall1', 'assets/mauer.png');
+	game.load.image('wall2', 'assets/mauer2.png');
 }
 
 // Typlose Variabeln für die gesamte Laufzeit
@@ -42,7 +42,8 @@ var hitbox1;
 // Für die Zuweisung des Inputs der Pfeiltasten für Spieler 2
 var cursors;
 
-// Schießen Variablen (bullets für die Kollisonsbrechnung, bulletTime = wie oft die Kästen runterfallen,
+// Schießen Variablen (bullets für die Kollisonsbrechnung, bulletTime = wie oft
+// die Kästen runterfallen,
 // fireButton für die auswahl des Schießenbuttons)
 var bullets;
 var bulletTime = 0;
@@ -65,11 +66,11 @@ var wallsVelocity = 0;
 var wallLive;
 var dropWallCheck = false;
 
-//Wall Speicher der einzelnen Spieler
+// Wall Speicher der einzelnen Spieler
 var wallMemory1 = 0;
 var wallMemory2 = 0;
 
-//Benachrichtungen zu den Spielern was passiert, z.B. PowerUps
+// Benachrichtungen zu den Spielern was passiert, z.B. PowerUps
 var popUpText1 = 0;
 var popUpText2 = 0;
 
@@ -108,21 +109,21 @@ function create() {
 	game.physics.arcade.enable(line2);
 	line2.body.immovable = true;
 
-    
-    
 	// Startposition für die Spieler , und assets (Bilder für Bewegung...)
 	// gesetzt
 	player1 = game.add.group();
 	player1 = game.add.sprite(32, game.world.height - 150, 'dude');
-	player2 = game.add.sprite(game.world.width - 64, game.world.height - 150,'dude2');
+	player2 = game.add.sprite(game.world.width - 64, game.world.height - 150,
+			'dude2');
 
 	// Animationen für nach links, rechts gehen
-	/*player1.animations.add('left', [ 0, 1, 2, 3 ], 10, true);
-	player1.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
-
-	player2.animations.add('left', [ 0, 1, 2, 3 ], 10, true);
-	player2.animations.add('right', [ 5, 6, 7, 8 ], 10, true);*/
-    
+	/*
+	 * player1.animations.add('left', [ 0, 1, 2, 3 ], 10, true);
+	 * player1.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
+	 * 
+	 * player2.animations.add('left', [ 0, 1, 2, 3 ], 10, true);
+	 * player2.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
+	 */
 
 	// Stellt die Phsic beider Spieler ein, z.B. für Kollisionsberechnung
 	game.physics.arcade.enable(player1);
@@ -192,6 +193,7 @@ function create() {
 
 	walls = game.add.physicsGroup(Phaser.Physics.ARCADE);
 	walls.createMultiple(10, 'wall1');
+	boxes.setAll('anchor.y', 0.5);
 	walls.setAll('outOfBoundKill', true);
 	walls.setAll('checkWorldBounds', true);
 	walls.setAll('type', 2);
@@ -263,8 +265,13 @@ function update() {
 			dropWallCheck = false;
 		}
 
-		if (dropWall2.isDown) {
+		if (dropWall2.isDown && !dropWallCheck) {
+			dropWallCheck = true;
 			dropWall(player2);
+		}
+
+		if (!dropWall2.isDown && dropWallCheck) {
+			dropWallCheck = false;
 		}
 	}
 
@@ -279,10 +286,10 @@ function update() {
 	}
 	if ((game.physics.arcade.collide(player2, line2, null)
 			|| game.physics.arcade.collide(player1, line1, null)
-			|| game.physics.arcade.collide(player2, invisWall, null) 
+			|| game.physics.arcade.collide(player2, invisWall, null)
 			|| game.physics.arcade.collide(player1, invisWall, null)
-			|| game.physics.arcade.collide(player1, walls, null)
-			|| game.physics.arcade.collide(player2, walls, null))) {
+			|| game.physics.arcade.collide(player1, walls, null) || game.physics.arcade
+			.collide(player2, walls, null))) {
 
 	}
 
@@ -345,20 +352,22 @@ function update() {
 	}
 
 	// abwerfen der Boxes während das Spiel läuft
-	if (gameOn == 0){
+	if (gameOn == 0) {
 		dropBox();
-    }
+	}
 
 	// Wenn Kugel Spieler trifft dann führe playerXgotHit aus
-	game.physics.arcade.overlap(bulletsPlayer2, player1, player1gotHit, null, this);
-	game.physics.arcade.overlap(bulletsPlayer1, player2, player2gotHit, null, this);
-    
+	game.physics.arcade.overlap(bulletsPlayer2, player1, player1gotHit, null,
+			this);
+	game.physics.arcade.overlap(bulletsPlayer1, player2, player2gotHit, null,
+			this);
+
 	// Wenn Kugel PowerUps trifft führe boxGotHit aus
 	game.physics.arcade.overlap(bulletsPlayer1, boxes, boxGotHit, null, this);
 	game.physics.arcade.overlap(bulletsPlayer2, boxes, boxGotHit, null, this);
-    
-    //Wenn Kugel Mauer trifft
-    game.physics.arcade.overlap(bulletsPlayer1, walls, wallGotHit, null, this);
+
+	// Wenn Kugel Mauer trifft
+	game.physics.arcade.overlap(bulletsPlayer1, walls, wallGotHit, null, this);
 	game.physics.arcade.overlap(bulletsPlayer2, walls, wallGotHit, null, this);
 
 }
@@ -400,48 +409,52 @@ function dropBox() {
 	}
 }
 
-//lässt die Mauer schwächer werden, hält nur drei Schuss aus
-function wallGotHit(bullet, wall){
-    if(wall.type == 2){
-        wall.type = 1;
-        wall = game.add.sprite('wall2');
-    }
-    else if(wall.type == 1){
-        wall.kill();
+// lässt die Mauer schwächer werden, hält nur drei Schuss aus
+function wallGotHit(bullet, wall) {
+	if (wall.type == 2) {
+		wall.type = 1;
+		wall = game.add.sprite('wall2');
+	} else if (wall.type == 1) {
+		wall.kill();
 
-    }
-    
-    bullet.kill();
+	}
+
+	bullet.kill();
 }
 
-//PowerUp-Treff-Funktion
-function boxGotHit(bullet, box){
-	
-    // Wenn die Kugel von Spieler ein
-    if(bullet.key == 'bullet1'){
-        
-        var randomNumber = game.rnd.integerInRange(0,1);
-        switch(randomNumber){
-            case 0: increaseBulletVelocity(player1);
-            case 1: decreaseBulletVelocity(player1);
-            case 2: getOneWall(player1);
-        }
-    }else{
-        var randomNumber = game.rnd.integerInRange(0,1);
-        switch(randomNumber){
-            case 0: increaseBulletVelocity(player2);
-            case 1: decreaseBulletVelocity(player2);
-            case 2: getOneWall(player2);
-        }  
-    }
-    
-    // Entfernt die Kugel die die Box getroffen hat
-    bullet.kill();
-    
-    // Entfernt die Box die getroffen wurde
-    box.kill(); 
-}
+// PowerUp-Treff-Funktion
+function boxGotHit(bullet, box) {
 
+	// Wenn die Kugel von Spieler ein
+	if (bullet.key == 'bullet1') {
+
+		var randomNumber = game.rnd.integerInRange(0, 1);
+		switch (randomNumber) {
+		case 0:
+			increaseBulletVelocity(player1);
+		case 1:
+			decreaseBulletVelocity(player1);
+		case 2:
+			getOneWall(player1);
+		}
+	} else {
+		var randomNumber = game.rnd.integerInRange(0, 1);
+		switch (randomNumber) {
+		case 0:
+			increaseBulletVelocity(player2);
+		case 1:
+			decreaseBulletVelocity(player2);
+		case 2:
+			getOneWall(player2);
+		}
+	}
+
+	// Entfernt die Kugel die die Box getroffen hat
+	bullet.kill();
+
+	// Entfernt die Box die getroffen wurde
+	box.kill();
+}
 
 // Verhalten wenn Spieler 1 von einer Kugel getroffen wird
 function player1gotHit(player, bullet) {
@@ -502,42 +515,47 @@ function player2gotHit(player, bullet) {
 	}
 
 }
-//Powerups:
+// Powerups:
 
-//der Mauerspeicher jeders Spielers wird erhöht
-function getOneWall(player){
-    if(player == player1){
-        wallMemory1 = wallMemory1+1;
-        powerUpText1.setText("Du hast nun eine Mauer mehr");
-        game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
-    }else{
-        wallMemory2 = wallMemory2+1;
-        powerUpText2.setText("Du hast nun eine Mauer mehr");  
-        game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
-    }
+// der Mauerspeicher jeders Spielers wird erhöht
+function getOneWall(player) {
+	if (player == player1) {
+		wallMemory1 = wallMemory1 + 1;
+		powerUpText1.setText("Du hast nun eine Mauer mehr");
+		game.time.events
+				.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
+	} else {
+		wallMemory2 = wallMemory2 + 1;
+		powerUpText2.setText("Du hast nun eine Mauer mehr");
+		game.time.events
+				.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
+	}
 }
 
-//Funktion um die Schießgeschwindigkeit zu verändern
-function increaseBulletVelocity(Player){
-   
-        if(Player == player1){
-            bulletVelocity1 = bulletVelocity1/2;
-            powerUpText1.setText("Du kannst nun schneller schießen");
-            game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard1, this);
-            game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
-            
+// Funktion um die Schießgeschwindigkeit zu verändern
+function increaseBulletVelocity(Player) {
 
-        }else{
-            bulletVelocity2 = bulletVelocity2/2;
-            powerUpText2.setText("Du kannst nun schneller schießen");
-            game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard2, this);
-            game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
+	if (Player == player1) {
+		bulletVelocity1 = bulletVelocity1 / 2;
+		powerUpText1.setText("Du kannst nun schneller schießen");
+		game.time.events.add(Phaser.Timer.SECOND * 4,
+				setBulletVelocityToStandard1, this);
+		game.time.events
+				.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
 
-        }
+	} else {
+		bulletVelocity2 = bulletVelocity2 / 2;
+		powerUpText2.setText("Du kannst nun schneller schießen");
+		game.time.events.add(Phaser.Timer.SECOND * 4,
+				setBulletVelocityToStandard2, this);
+		game.time.events
+				.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
+
+	}
 }
 
-function setBulletVelocityToStandard1(){
-    bulletVelocity1 = 500;
+function setBulletVelocityToStandard1() {
+	bulletVelocity1 = 500;
 }
 
 function setBulletVelocityToStandard2() {
@@ -584,65 +602,70 @@ function checkOverlap() {
 	}
 	return true;
 }
-	//Funktion um die Schießgeschwindigkeit des Gegeners zu verlangsamen
-function decreaseBulletVelocity(Player){
-    if(Player == player1){
-            bulletVelocity2 = bulletVelocity2*2;
-            powerUpText1.setText("Dein Gegner schießt nun langsamer");
-            game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard2, this);
-            game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
+// Funktion um die Schießgeschwindigkeit des Gegeners zu verlangsamen
+function decreaseBulletVelocity(Player) {
+	if (Player == player1) {
+		bulletVelocity2 = bulletVelocity2 * 2;
+		powerUpText1.setText("Dein Gegner schießt nun langsamer");
+		game.time.events.add(Phaser.Timer.SECOND * 4,
+				setBulletVelocityToStandard2, this);
+		game.time.events
+				.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
 
-    }else{
-           bulletVelocity1 = bulletVelocity1*2;
-           powerUpText2.setText("Dein Gegner schießt nun langsamer");
-           game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard1, this);
-           game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
+	} else {
+		bulletVelocity1 = bulletVelocity1 * 2;
+		powerUpText2.setText("Dein Gegner schießt nun langsamer");
+		game.time.events.add(Phaser.Timer.SECOND * 4,
+				setBulletVelocityToStandard1, this);
+		game.time.events
+				.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
 
-        }
+	}
 }
 
-function setPowerUpText1Back(){
-    powerUpText1.setText("");
+function setPowerUpText1Back() {
+	powerUpText1.setText("");
 }
-function setPopUpText2Back(){
-    powerUpText2.setText("");
+function setPowerUpText2Back() {
+	powerUpText2.setText("");
 }
 
 function dropWall(player) {
-	var check = checkOverlap();
-    if(player == player1 && check){
-        if(wallMemory1 > 0){
-            if (player.position.x <= 300){
-		      wall = walls.getFirstExists(false);
-		      wall.revive();
-		      wall.x = player.position.x + 40;
-		      wall.y = player.position.y;
-		      console.log(wall.x, wall.y, player.position.x, player.position.y);
-                wallMemory1 = wallMemory1 - 1;
-                powerUpText1.setText("Du hast nun eine Mauer weniger");
-                game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
-            }
-        }else{
-            powerUpText1.setText("Du hast keine Mauern mehr zum setzten");
-            game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
-        }
-	}else{
-        if(wallMemory2 > 0){
-            if (player.position.x <= 300){
-		      wall = walls.getFirstExists(false);
-		      wall.revive();
-		      wall.x = player.position.x - 40;
-		      wall.y = player.position.y;
-		      console.log(wall.x, wall.y, player.position.x, player.position.y);
-                wallMemory1 = wallMemory2 - 1;
-                powerUpText2.setText("Du hast nun eine Mauer weniger");
-                game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
-            }
-        }else{
-            powerUpText2.setText("Du hast keine Mauern mehr zum setzten");
-            game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
-        }
-    }
+	//var check = checkOverlap(); TODO
+	if (player == player1) {
+		if (wallMemory1 > 0) {
+			wall = walls.getFirstExists(false);
+			wall.revive();
+			wall.x = player.position.x + 40;
+			wall.y = player.position.y;
+			//console.log(wall.x, wall.y, player.position.x, player.position.y);
+			wallMemory1 = wallMemory1 - 1;
+			powerUpText1.setText("Du hast nun eine Mauer weniger");
+			game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back,
+					this);
+		} else {
+			powerUpText1.setText("Du hast keine Mauern mehr zum setzten");
+			game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back,
+					this);
+		}
+	} else {
+		if (wallMemory2 > 0) {
+			console.log(wallMemory2);
+			wall = walls.getFirstExists(false);
+			wall.revive();
+			wall.x = player.position.x - 40;
+			wall.y = player.position.y;
+			//console.log(wall.x, wall.y, player.position.x, player.position.y);
+			wallMemory2 = wallMemory2 - 1;
+			powerUpText2.setText("Du hast nun eine Mauer weniger");
+			game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back,
+					this);
+		} else {
+			powerUpText2.setText("Du hast keine Mauern mehr zum setzten");
+			game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back,
+					this);
+		}
+	}
 }
 
 // Wenn spiel neu gestartet wird
@@ -666,5 +689,5 @@ function restart() {
 function render() {
 	game.debug.body(hitbox1);
 	game.debug.body(player1);
-	//game.debug.body(invisWall);
+	// game.debug.body(invisWall);
 }

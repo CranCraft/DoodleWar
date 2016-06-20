@@ -12,11 +12,11 @@ function preload() {
 	game.load.image('sky', 'assets/sky.png');
 	game.load.image('ground', 'assets/platform.png');
 	game.load.image('star', 'assets/star.png');
-	game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+	game.load.spritesheet('dude', 'assets/dude1.png', 32, 48);
 	game.load.image('bullet1', 'assets/bullet1.png');
     game.load.image('bullet2', 'assets/bullet2.png');
 	game.load.image('box' , 'assets/box.png');
-    game.load.image('heart' , 'assets/heart.png');
+    game.load.image('heart' , 'assets/herz.png');
 
 }
 
@@ -364,8 +364,9 @@ function wallGotHit(bullet, wall){
         //wall = game.add.sprite('star');
     }
     else if(wall.type == 1){
-        console.log(wall.type);
         wall.kill();
+        //wall = game.add.sprite('star');
+
     }
     
     bullet.kill();

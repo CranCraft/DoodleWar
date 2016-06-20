@@ -14,25 +14,25 @@ function preload() {
 	game.load.image('lines', 'assets/platform.png');
 	game.load.image('star', 'assets/star.png');
 	game.load.spritesheet('dude', 'assets/dude1.png', 32, 48);
-    game.load.spritesheet('dude2', 'assets/dude2.png', 32, 48);
-    game.load.spritesheet('walk1', 'assets/dude1.png', 32, 48);
-    game.load.spritesheet('walk2', 'assets/dude2.png', 32, 48);
+	game.load.spritesheet('dude2', 'assets/dude2.png', 32, 48);
+	game.load.spritesheet('walk1', 'assets/dude1.png', 32, 48);
+	game.load.spritesheet('walk2', 'assets/dude2.png', 32, 48);
 	game.load.image('bullet1', 'assets/bullet1.png');
 	game.load.image('bullet2', 'assets/bullet2.png');
 	game.load.image('dropbox', 'assets/box.png');
 	game.load.image('heart', 'assets/herz.png');
 	game.load.image('wall1', 'assets/mauer.png');
 	game.load.image('wall2', 'assets/mauer2.png');
-    game.load.image('eins', 'assets/1.png');
-    game.load.image('zwei', 'assets/2.png');
-    game.load.image('drei', 'assets/3.png');
-    game.load.image('vier', 'assets/4.png');
-    game.load.image('fünf', 'assets/5.png');
-    game.load.image('sechs', 'assets/6.png');
-    game.load.image('sieben', 'assets/7.png');
-    game.load.image('acht', 'assets/8.png');
-    game.load.image('neun', 'assets/9.png');
-    game.load.image('zehn', 'assets/10.png');
+	game.load.image('eins', 'assets/1.png');
+	game.load.image('zwei', 'assets/2.png');
+	game.load.image('drei', 'assets/3.png');
+	game.load.image('vier', 'assets/4.png');
+	game.load.image('fünf', 'assets/5.png');
+	game.load.image('sechs', 'assets/6.png');
+	game.load.image('sieben', 'assets/7.png');
+	game.load.image('acht', 'assets/8.png');
+	game.load.image('neun', 'assets/9.png');
+	game.load.image('zehn', 'assets/10.png');
 	game.load.image('blackPixel', 'assets/onePixel.png');
 }
 
@@ -116,7 +116,6 @@ function create() {
 	invisField.scale.setTo(800, 100);
 	invisField.alpha = 0.2;
 
-
 	// Für die beiden Linienobjekte wird die Pysic angestellt damit eine
 	// Kollisionsbrechenung stattfinden kann
 	game.physics.enable(line1, Phaser.Physics.ARCADE);
@@ -136,22 +135,19 @@ function create() {
 	player2 = game.add.sprite(game.world.width - 64, game.world.height - 150, 'dude2');
 
 	// Animationen für nach links, rechts gehen
-	player1.animations.add('walk1', [ 0, 1, 2], 10, true);
+	player1.animations.add('walk1', [0, 1, 2], 10, true);
 	//player1.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
 
-	player2.animations.add('walk2', [ 0, 1, 2], 10, true);
+	player2.animations.add('walk2', [0, 1, 2], 10, true);
 	//player2.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
-    
 
 	/*
-	 * player1.animations.add('left', [ 0, 1, 2, 3 ], 10, true);
-	 * player1.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
-	 * 
-	 * player2.animations.add('left', [ 0, 1, 2, 3 ], 10, true);
-	 * player2.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
-	 */
-
-
+	* player1.animations.add('left', [ 0, 1, 2, 3 ], 10, true);
+	* player1.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
+	*
+	* player2.animations.add('left', [ 0, 1, 2, 3 ], 10, true);
+	* player2.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
+	*/
 
 	// Stellt die Phsic beider Spieler ein, z.B. für Kollisionsberechnung
 	game.physics.arcade.enable(player1);
@@ -219,7 +215,7 @@ function create() {
 
 	// Power Up Walls
 	walls = game.add.physicsGroup(Phaser.Physics.ARCADE);
-	walls.createMultiple(10, 'wall1');
+	walls.createMultiple(20, 'wall1');
 	boxes.setAll('anchor.y', 0.5);
 	walls.setAll('outOfBoundKill', true);
 	walls.setAll('checkWorldBounds', true);
@@ -234,26 +230,25 @@ function create() {
 	for (var i = 0; i < 3; i++) {
 		var player1Lives = livesPlayer1.create(18 + (30 * i), 26, 'heart');
 		player1Lives.anchor.setTo(0.5, 0.5);
-	}  
-    
+	}
+
 	// Leben für Spieler 2
 	livesPlayer2 = game.add.group();
 
 	// Setzt die Bilder für das Leben nebeneinander
 	for (var i = 0; i < 3; i++) {
 
-
 		var player2Lives = livesPlayer2.create(game.world.width - 78 + (30 * i), 26, 'heart');
 		player2Lives.anchor.setTo(0.5, 0.5);
 	}
-    
-    //Anzeige der Mauern
-    var wallPicture1;
-    var wallPicture2;
-    wallPicture1 = game.add.sprite(36 , 50, 'mauer');
-    wallPicture1.anchor.setTo(0.5,0.5);
-    wallPicture2 = game.add.sprite(-78, 50, 'mauer');
-    wallPicture2.anchor.setTo(0.5,0.5);
+
+	//Anzeige der Mauern
+	var wallPicture1;
+	var wallPicture2;
+	wallPicture1 = game.add.sprite(36, 50, 'mauer');
+	wallPicture1.anchor.setTo(0.5, 0.5);
+	wallPicture2 = game.add.sprite(-78, 50, 'mauer');
+	wallPicture2.anchor.setTo(0.5, 0.5);
 
 	// Text nach Sieg eines Spielers und Anleitung für Restart
 	stateText = game.add.text(game.world.centerX, game.world.centerY, ' ', {
@@ -423,7 +418,7 @@ function fireBulletPlayer2() {
 function dropBox() {
 	if (game.time.now > boxesTime) {
 		box = boxes.getFirstExists(false);
-		box.reset(1.5 * game.world.width / 3 - 30, 0);
+		box.reset(1.5 * game.world.width / 3 - 6, 0);
 		box.body.velocity.y = 250;
 
 		// Variable für die Geschwindigkeit in der geschossen werden kann
@@ -439,7 +434,6 @@ function wallGotHit(bullet, wall) {
 		wall = game.add.sprite('wall2');
 	} else if (wall.type == 1) {
 		wall.kill();
-
 
 	}
 
@@ -698,52 +692,40 @@ function restart() {
 
 }
 
-function showWalls(zahl1){
-    var wall
-    var zahl = zahl1;
-    if(zahl1 == 1){
-        var eins = game.add.sprite(18,50, 'eins');
-    }
-    if(zahl == 2){
-        var zwei = game.add.sprite(18,50, 'zwei');
-    }
-    if(zahl == 3){
-        var drei = game.add.sprite(18,50, 'drei');
-    }
-    if(zahl == 4){
-        var vier = game.add.sprite(18,50, 'vier');
-    }
-    if(zahl == 5){
-        var fünf = game.add.sprite(18,50, 'fünf');
-    }
-    if(zahl == 6){
-        var sechs = game.add.sprite(18,50, 'sechs');
-    }
-    if(zahl == 7){
-        var sieben = game.add.sprite(18,50, 'sieben');
-    }
-    if(zahl == 8){
-        var acht = game.add.sprite(18,50, 'acht');
-    }
-    if(zahl == 9){
-        var neun = game.add.sprite(18,50, 'neun');
-    }
-    if(zahl == 10){
-        var zehn = game.add.sprite(18,50, 'zehn');
-    }
+function showWalls(zahl1) {
+	var wall;
+	var zahl = zahl1;
+	if (zahl1 == 1) {
+		var eins = game.add.sprite(18, 50, 'eins');
+	}
+	if (zahl == 2) {
+		var zwei = game.add.sprite(18, 50, 'zwei');
+	}
+	if (zahl == 3) {
+		var drei = game.add.sprite(18, 50, 'drei');
+	}
+	if (zahl == 4) {
+		var vier = game.add.sprite(18, 50, 'vier');
+	}
+	if (zahl == 5) {
+		var fünf = game.add.sprite(18, 50, 'fünf');
+	}
+	if (zahl == 6) {
+		var sechs = game.add.sprite(18, 50, 'sechs');
+	}
+	if (zahl == 7) {
+		var sieben = game.add.sprite(18, 50, 'sieben');
+	}
+	if (zahl == 8) {
+		var acht = game.add.sprite(18, 50, 'acht');
+	}
+	if (zahl == 9) {
+		var neun = game.add.sprite(18, 50, 'neun');
+	}
+	if (zahl == 10) {
+		var zehn = game.add.sprite(18, 50, 'zehn');
+	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 function render() {
 	game.debug.body(hitbox1);

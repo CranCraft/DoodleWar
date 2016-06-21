@@ -515,7 +515,7 @@ function boxGotHit(bullet, box) {
 	// Wenn die Kugel von Spieler ein
 	if (bullet.key == 'bullet1') {
 
-		var randomNumber = game.rnd.integerInRange(2, 2);
+		var randomNumber = game.rnd.integerInRange(0, 2);
 		switch (randomNumber) {
 		case 0:
 			increaseBulletVelocity(player1);
@@ -528,7 +528,7 @@ function boxGotHit(bullet, box) {
 			break;
 		}
 	} else {
-		var randomNumber = game.rnd.integerInRange(2, 2);
+		var randomNumber = game.rnd.integerInRange(0, 2);
 		switch (randomNumber) {
 		case 0:
 			increaseBulletVelocity(player2);

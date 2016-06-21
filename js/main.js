@@ -229,7 +229,6 @@ function create() {
 	// Power Up Walls
 	walls = game.add.physicsGroup(Phaser.Physics.ARCADE);
 	walls.createMultiple(20, 'wall1');
-	boxes.setAll('anchor.y', 0.5);
 	walls.setAll('outOfBoundKill', true);
 	walls.setAll('checkWorldBounds', true);
 	walls.setAll('type', 2);

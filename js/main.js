@@ -34,9 +34,13 @@ function preload() {
 	game.load.image('acht', 'assets/8.png');
 	game.load.image('neun', 'assets/9.png');
 	game.load.image('zehn', 'assets/10.png');
-	game.load.image('null', 'assets/9.png');
+	game.load.image('null', 'assets/0.png');
 	game.load.image('blackPixel', 'assets/onePixel.png');
 	game.load.image('wallx', 'assets/x.png');
+    game.load.image('noWall', 'assets/keineMauer.png');
+    game.load.image('slower', 'assets/langsamer.png');
+    game.load.image('newWall', 'assets/neueMauer.png');
+    game.load.image('faster', 'assets/schneller.png');
 
 	//Sounds
 	game.load.audio('shotPlayerOne', 'assets/SoundEffects/shot_player1.mp3');
@@ -100,6 +104,16 @@ var wallDisplayArray = new Array();
 // Benachrichtungen zu den Spielern was passiert, z.B. PowerUps
 var popUpText1 = 0;
 var popUpText2 = 0;
+
+var slowerNotification1;
+var fasterNotification1;
+    var noWallNotification1;
+    var newWallNotification1;
+
+    var slowerNotification2;
+	var fasterNotification2;
+    var noWallNotification2;
+    var newWallNotification2;
 
 // Folgende Funktion wird zu beginn einmal ausgeführt und ersellt alle Objekte
 // für ein Spiel inklusive Spieler, Leben usw.
@@ -276,7 +290,27 @@ function create() {
 	var wallDisplayXRight = game.add.sprite(game.width - 60, 53, 'wallx');
 	wallDisplayRight.visible = true;
 	wallDisplayXRight.visible = true;
-	
+    
+    //PowerUp Benachrichtigungen
+    slowerNotification1 = game.add.sprite(75, 0, 'slower');
+	fasterNotification1 = game.add.sprite(75, 0, 'faster');
+    noWallNotification1 = game.add.sprite(75, 0, 'noWall');
+    newWallNotification1 = game.add.sprite(75, 0, 'newWall');
+    
+    slowerNotification1.visible = false;
+    fasterNotification1.visible = false;
+    noWallNotification1.visible = false;
+    newWallNotification1.visible = false;
+    
+    slowerNotification2 = game.add.sprite(game.width-275, 0, 'slower');
+	fasterNotification2 = game.add.sprite(game.width-275, 0, 'faster');
+    noWallNotification2 = game.add.sprite(game.width-275, 0, 'noWall');
+    newWallNotification2 = game.add.sprite(game.width-275, 0, 'newWall');
+    
+    slowerNotification2.visible = false;
+    fasterNotification2.visible = false;
+    noWallNotification2.visible = false;
+    newWallNotification2.visible = false;
 
 	//Anzeige der Mauern
 	for (var i = 0; i < 22; i++) {
@@ -626,15 +660,17 @@ function getOneWall(player) {
 		wallMemory1 = wallMemory1 + 1;
 		wallDisplayArray[wallMemory1].visible = true;
 
-		powerUpText1.setText("Du hast nun eine Mauer mehr");
-		game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
+		//powerUpText1.setText("Du hast nun eine Mauer mehr");
+        newWallNotification1.visible = true;
+		game.time.events.add(Phaser.Timer.SECOND * 4, setNewWall1NotificationVisibilityFalse, this);
 	} else {
 		wallDisplayArray[wallMemory2 + 11].visible = false;
 		wallMemory2 = wallMemory2 + 1;
 		wallDisplayArray[wallMemory2 + 11].visible = true;
 
-		powerUpText2.setText("Du hast nun eine Mauer mehr");
-		game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
+		//powerUpText2.setText("Du hast nun eine Mauer mehr");
+        newWallNotification2.visible = true;
+		game.time.events.add(Phaser.Timer.SECOND * 4, setNewWall2NotificationVisibilityFalse, this);
 	}
 }
 
@@ -643,15 +679,37 @@ function increaseBulletVelocity(Player) {
 
 	if (Player == player1) {
 		bulletVelocity1 = bulletVelocity1 / 2;
-		powerUpText1.setText("Du kannst nun schneller schießen");
+		//powerUpText1.setText("Du kannst nun schneller schießen");
+        fasterNotification1.visible = true;
 		game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard1, this);
-		game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
+		game.time.events.add(Phaser.Timer.SECOND * 4, setFaster1NotificationVisibilityFalse, this);
 
 	} else {
 		bulletVelocity2 = bulletVelocity2 / 2;
-		powerUpText2.setText("Du kannst nun schneller schießen");
+		//powerUpText2.setText("Du kannst nun schneller schießen");
+        fasterNotification2.visible = true;
 		game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard2, this);
-		game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
+		game.time.events.add(Phaser.Timer.SECOND * 4, setFaster2NotificationVisibilityFalse, this);
+
+	}
+}
+
+
+// Funktion um die Schießgeschwindigkeit des Gegeners zu verlangsamen
+function decreaseBulletVelocity(Player) {
+	if (Player == player1) {
+		bulletVelocity2 = bulletVelocity2 * 2;
+		//powerUpText1.setText("Dein Gegner schießt nun langsamer");
+        slowerNotification1.visible = true;
+		game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard2, this);
+        game.time.events.add(Phaser.Timer.SECOND * 4, setSlower1NotificationVisibilityFalse, this);
+
+	} else {
+		bulletVelocity1 = bulletVelocity1 * 2;
+		//powerUpText2.setText("Dein Gegner schießt nun langsamer");
+        slowerNotification2.visible = true;
+		game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard1, this);
+		game.time.events.add(Phaser.Timer.SECOND * 4, setSlower2NotificationVisibilityFalse, this);
 
 	}
 }
@@ -662,26 +720,33 @@ function setBulletVelocityToStandard1() {
 
 function setBulletVelocityToStandard2() {
 	bulletVelocity2 = 500;
-
 }
 
-// Funktion um die Schießgeschwindigkeit des Gegeners zu verlangsamen
-function decreaseBulletVelocity(Player) {
-	if (Player == player1) {
-		bulletVelocity2 = bulletVelocity2 * 2;
-		powerUpText1.setText("Dein Gegner schießt nun langsamer");
-		game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard2, this);
-		// game.time.events.add(Phaser.Timer.SECOND * 4, powerUpText2 = "",
-		// this);
 
-	} else {
-		bulletVelocity1 = bulletVelocity1 * 2;
-		powerUpText2.setText("Dein Gegner schießt nun langsamer");
-		game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard1, this);
-		// game.time.events.add(Phaser.Timer.SECOND * 4, popUpText2 = "",
-		// this);
-
-	}
+//PowerUp Benachrichtigungen sollen verschwinden
+function setNewWall1NotificationVisibilityFalse(){    
+    newWallNotification1.visible = false;
+}
+function setNewWall2NotificationVisibilityFalse(){    
+    newWallNotification2.visible = false;
+}
+function setNoWall1NotificationVisibilityFalse(){    
+    noWall1Notification1.visible = false;
+}
+function setNoWall2NotificationVisibilityFalse(){    
+    noWallNotification2.visible = false;
+}
+function setSlower1NotificationVisibilityFalse(){    
+    slowerNotification1.visible = false;
+}
+function setSlower2NotificationVisibilityFalse(){    
+    slowerNotification2.visible = false;
+}
+function setFaster1NotificationVisibilityFalse(){    
+    fasterNotification1.visible = false;
+}
+function setFaster2NotificationVisibilityFalse(){    
+    fasterNotification2.visible = false;
 }
 
 function checkOverlap() {
@@ -742,11 +807,11 @@ function dropWall(player) {
 			wallMemory1 = wallMemory1 - 1;
 			wallDisplayArray[wallMemory1].visible = true;
 
-			powerUpText1.setText("Du hast nun eine Mauer weniger");
-			game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
+
 		} else {
-			powerUpText1.setText("Du hast keine Mauern mehr zum setzten");
-			game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
+            noWallNotification1.visible = true;
+			//powerUpText1.setText("Du hast keine Mauern mehr zum setzten");
+			game.time.events.add(Phaser.Timer.SECOND * 4, setNoWall1NotificationVisibilityFalse, this);
 		}
 	} else if (check){
 		if (wallMemory2 > 0) {
@@ -760,11 +825,11 @@ function dropWall(player) {
 			wallMemory2 = wallMemory2 - 1;
 			wallDisplayArray[wallMemory2 + 11].visible = true;
 
-			powerUpText2.setText("Du hast nun eine Mauer weniger");
-			game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
-		} else {
-			powerUpText2.setText("Du hast keine Mauern mehr zum setzten");
-			game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
+
+		} else {           
+            noWallNotification2.visible = true;
+			//powerUpText2.setText("Du hast keine Mauern mehr zum setzten");
+			game.time.events.add(Phaser.Timer.SECOND * 4, setNoWall2NotificationVisibilityFalse, this);
 		}
 	}
 }

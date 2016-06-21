@@ -171,11 +171,23 @@ function create() {
 	player2.body.collideWorldBounds = true;
 
 	// Spieler eins HitBox
-	hitboxes1 = game.add.group();
+	hitboxes1 = game.add.physicsGroup(Phaser.Physics.ARCADE);
 	hitboxes1.enableBody = true;
 	player1.addChild(hitboxes1);
-	hitbox1 = hitboxes1.create(0, 0, null);
-	hitbox1.body.setSize(player1.width, player1.height, player1.width, 0);
+	hitbox1 = hitboxes1.create(player1.width, 0, 'blackPixel');
+	hitbox1.scale.setTo(player1.width, player1.height);
+	hitbox1.enablebody = true;	
+	hitbox1.body.velocity.x = 0;
+	hitbox1.alpha = 0;
+	
+	hitboxes2 = game.add.physicsGroup(Phaser.Physics.ARCADE);
+	hitboxes2.enableBody = true;
+	player2.addChild(hitboxes2);
+	hitbox2 = hitboxes2.create(-player2.width, 0, 'blackPixel');
+	hitbox2.scale.setTo(player2.width, player2.height);
+	hitbox2.enablebody = true;	
+	hitbox2.body.velocity.x = 0;
+	hitbox2.alpha = 0;
 
 	// Steuerung des Spielers 2 mithilfe der Pfeiltasten
 	cursors = game.input.keyboard.createCursorKeys();
@@ -234,6 +246,7 @@ function create() {
 	walls.setAll('type', 2);
 	walls.setAll('enableBody', true);
 	walls.setAll('body.immovable', true);
+	walls.setAll('body.velocity', 0),
 
 	// Leben für Spieler 1
 	livesPlayer1 = game.add.group();
@@ -249,7 +262,6 @@ function create() {
 
 	// Setzt die Bilder für das Leben nebeneinander
 	for (var i = 0; i < 3; i++) {
-
 		var player2Lives = livesPlayer2.create(game.world.width - 78 + (30 * i), 26, 'heart');
 		player2Lives.anchor.setTo(0.5, 0.5);
 	}
@@ -336,6 +348,7 @@ function update() {
 	if (gameOn == 0) {
 		if (fireButton1.isDown && !fireButtonCheckPlayer1) {
 			fireButtonCheckPlayer1 = true;
+			getOneWall(player1);
 			fireBulletPlayer1();
 		}
 
@@ -345,6 +358,7 @@ function update() {
 
 		if (fireButton2.isDown && !fireButtonCheckPlayer2) {
 			fireButtonCheckPlayer2 = true;
+			getOneWall(player2);
 			fireBulletPlayer2();
 		}
 
@@ -678,18 +692,17 @@ function decreaseBulletVelocity(Player) {
 
 function checkOverlap() {
 
-	var check = false;
-
+	var check1 = false;
+	var check2 = false;
+	var boundsB1 = hitboxes1.getBounds();
+	var boundsB2 = hitboxes2.getBounds();
 	for (var i = 0,
 	    len = walls.children.length; i < len; i++) {
 		var boundsA = walls.children[i].getBounds();
-		console.log("Wall Position" + boundsA);
-		console.log("WorldPosition" + hitbox1.worldPosition);
-		console.log("WorldPosition" + hitbox1);
-		check = game.physics.arcade.collide(hitbox1, boundsA);
-		console.log(check);
-		if (check == true) {
-			console.log("Fehler, hier steht schon eine Mauer	");
+		check1 = Phaser.Rectangle.intersects(boundsA, boundsB1);
+		check2 = Phaser.Rectangle.intersects(boundsA, boundsB2);
+		if (check1 == true || check2 == true) {
+			//Wenn eine Mauer bereits dort steht
 			return false;
 		}
 	}
@@ -722,13 +735,13 @@ function setPowerUpText2Back() {
 }
 
 function dropWall(player) {
-	//var check = checkOverlap(); TODO
-	if (player == player1) {
+	var check = checkOverlap();
+	if (player == player1 && check) {
 		if (wallMemory1 > 0) {
 			wall = walls.getFirstExists(false);
 			wall.revive();
 			wall.x = player.position.x + 40;
-			wall.y = player.position.y;
+			wall.y = player.position.y + 5;
 			//console.log(wall.x, wall.y, player.position.x, player.position.y);
 
 			wallDisplayArray[wallMemory1].visible = false;
@@ -741,7 +754,7 @@ function dropWall(player) {
 			powerUpText1.setText("Du hast keine Mauern mehr zum setzten");
 			game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
 		}
-	} else {
+	} else if (check){
 		if (wallMemory2 > 0) {
 			wall = walls.getFirstExists(false);
 			wall.revive();
@@ -783,6 +796,5 @@ function restart() {
 
 function render() {
 	//game.debug.body(hitbox1);
-	//game.debug.body(player1);
-	// game.debug.body(invisWall);
+	//game.debug.spriteInfo(hitbox1);
 }

@@ -151,7 +151,7 @@ function create() {
 	player1.animations.add('walk1', [0, 1, 2], 3, true);
 	//player1.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
 
-	player2.animations.add('walk2', [0, 1, 2], 3, true);
+	player2.animations.add('walk2', [2, 1, 0], 3, true);
 	//player2.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
 
 	/*

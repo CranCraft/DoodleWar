@@ -39,8 +39,8 @@ function preload() {
 	game.load.image('wallx', 'assets/x.png');
 
 	//Sounds
-	game.load.audio('shotPlayerOne', 'assets/SoundEffects/Blaster-Imperial.wav');
-	game.load.audio('shotPlayerTwo', 'assets/SoundEffects/Blaster-Droideka.wav');
+	game.load.audio('shotPlayerOne', 'assets/SoundEffects/shot_player1.mp3');
+	game.load.audio('shotPlayerTwo', 'assets/SoundEffects/shot_player2.mp3');
 }
 
 // Typlose Variabeln für die gesamte Laufzeit
@@ -232,7 +232,7 @@ function create() {
 	boxes = game.add.group();
 	boxes.enableBody = true;
 	boxes.physicsBodyType = Phaser.Physics.ARCADE;
-	boxes.createMultiple(30, 'dropbox');
+	boxes.createMultiple(50, 'dropbox');
 	boxes.setAll('anchor.x', 0, 5);
 	boxes.setAll('anchor.y', 1);
 	boxes.setAll('outOfBoundKill', true);
@@ -348,7 +348,6 @@ function update() {
 	if (gameOn == 0) {
 		if (fireButton1.isDown && !fireButtonCheckPlayer1) {
 			fireButtonCheckPlayer1 = true;
-			getOneWall(player1);
 			fireBulletPlayer1();
 		}
 
@@ -358,7 +357,6 @@ function update() {
 
 		if (fireButton2.isDown && !fireButtonCheckPlayer2) {
 			fireButtonCheckPlayer2 = true;
-			getOneWall(player2);
 			fireBulletPlayer2();
 		}
 

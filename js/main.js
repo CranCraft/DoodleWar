@@ -148,10 +148,10 @@ function create() {
 	player2 = game.add.sprite(game.world.width - 64, game.world.height - 150, 'dude2');
 
 	// Animationen für nach links, rechts gehen
-	player1.animations.add('walk1', [0, 1, 2], 10, true);
+	player1.animations.add('walk1', [0, 1, 2], 3, true);
 	//player1.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
 
-	player2.animations.add('walk2', [0, 1, 2], 10, true);
+	player2.animations.add('walk2', [2, 1, 0], 3, true);
 	//player2.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
 
 	/*
@@ -399,21 +399,19 @@ function update() {
 			// Move to the left
 			player1.body.velocity.y = -150;
 
-			player1.animations.play('dude');
 		} else if (sdownKey.isDown) {
 			// Move to the right
 			player1.body.velocity.y = 150;
 
-			player1.animations.play('dude');
 		} else if (aleftKey.isDown) {
 			// Move to the right
 			player1.body.velocity.x = -150;
 
-			player1.animations.play('dude');
+			player1.animations.play('walk1');
 		} else if (drightKey.isDown) {
 			// Move to the right
 			player1.body.velocity.x = 150;
-			player1.animations.play('dude');
+			player1.animations.play('walk1');
 		} else {
 			// Stand still
 			player1.animations.stop();
@@ -426,22 +424,20 @@ function update() {
 			// Move to the left
 			player2.body.velocity.y = -150;
 
-			player2.animations.play('dude');
 		} else if (cursors.down.isDown) {
 			// Move to the right
 			player2.body.velocity.y = 150;
 
-			player2.animations.play('dude');
 		} else if (cursors.left.isDown) {
 			// Move to the right
 			player2.body.velocity.x = -150;
 
-			player2.animations.play('dude');
+			player2.animations.play('walk1');
 		} else if (cursors.right.isDown) {
 			// Move to the right
 			player2.body.velocity.x = 150;
 
-			player2.animations.play('dude1');
+			player2.animations.play('walk2');
 		} else {
 			// Stand still
 			player2.animations.stop();
@@ -529,7 +525,7 @@ function boxGotHit(bullet, box) {
 	// Wenn die Kugel von Spieler ein
 	if (bullet.key == 'bullet1') {
 
-		var randomNumber = game.rnd.integerInRange(2, 2);
+		var randomNumber = game.rnd.integerInRange(0, 2);
 		switch (randomNumber) {
 		case 0:
 			increaseBulletVelocity(player1);
@@ -542,7 +538,7 @@ function boxGotHit(bullet, box) {
 			break;
 		}
 	} else {
-		var randomNumber = game.rnd.integerInRange(2, 2);
+		var randomNumber = game.rnd.integerInRange(0, 2);
 		switch (randomNumber) {
 		case 0:
 			increaseBulletVelocity(player2);

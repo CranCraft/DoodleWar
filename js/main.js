@@ -731,7 +731,7 @@ function setNewWall2NotificationVisibilityFalse(){
     newWallNotification2.visible = false;
 }
 function setNoWall1NotificationVisibilityFalse(){    
-    noWall1Notification1.visible = false;
+    noWallNotification1.visible = false;
 }
 function setNoWall2NotificationVisibilityFalse(){    
     noWallNotification2.visible = false;
@@ -766,23 +766,6 @@ function checkOverlap() {
 		}
 	}
 	return true;
-}
-
-// Funktion um die Schießgeschwindigkeit des Gegeners zu verlangsamen
-function decreaseBulletVelocity(Player) {
-	if (Player == player1) {
-		bulletVelocity2 = bulletVelocity2 * 2;
-		powerUpText1.setText("Dein Gegner schießt nun langsamer");
-		game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard2, this);
-		game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText1Back, this);
-
-	} else {
-		bulletVelocity1 = bulletVelocity1 * 2;
-		powerUpText2.setText("Dein Gegner schießt nun langsamer");
-		game.time.events.add(Phaser.Timer.SECOND * 4, setBulletVelocityToStandard1, this);
-		game.time.events.add(Phaser.Timer.SECOND * 4, setPowerUpText2Back, this);
-
-	}
 }
 
 function setPowerUpText1Back() {

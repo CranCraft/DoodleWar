@@ -259,7 +259,7 @@ function create() {
 
 	// Power Up Walls
 	walls = game.add.physicsGroup(Phaser.Physics.ARCADE);
-	walls.createMultiple(20, 'wall1');
+	walls.createMultiple(50, 'wall1');
 	walls.setAll('outOfBoundKill', true);
 	walls.setAll('checkWorldBounds', true);
 	walls.setAll('type', 2);
@@ -395,6 +395,7 @@ function update() {
 	if (gameOn == 0) {
 		if (fireButton1.isDown && !fireButtonCheckPlayer1) {
 			fireButtonCheckPlayer1 = true;
+			getOneWall(player1);
 			fireBulletPlayer1();
 		}
 
@@ -557,8 +558,8 @@ function wallGotHit(bullet, wall) {
 		wall.type = 1;
 		wall = game.add.sprite('wall2');
 	} else if (wall.type == 1) {
-		wall.kill();
-
+		wall.destroy();
+		wall.type = 2;
 	}
 
 	bullet.kill();
@@ -785,16 +786,12 @@ function checkOverlap() {
 	var check4 = false;
 	var boundsB1 = hitboxes1.getBounds();
 	var boundsB2 = hitboxes2.getBounds();
-	var boundsB3 = line1.getBounds();
-	var boundsB4 = line2.getBounds();
 	for (var i = 0,
 	    len = walls.children.length; i < len; i++) {
 		var boundsA = walls.children[i].getBounds();
 		check1 = Phaser.Rectangle.intersects(boundsA, boundsB1);
 		check2 = Phaser.Rectangle.intersects(boundsA, boundsB2);
-		check3 = Phaser.Rectangle.intersects(boundsA, boundsB3);
-		check4 = Phaser.Rectangle.intersects(boundsA, boundsB4);
-		if (check1 == true || check2 == true || check3 == true || check4 == true) {
+		if (check1 == true || check2 == true) {
 			//Wenn eine Mauer bereits dort steht
 			return false;
 		}
@@ -873,6 +870,6 @@ function restart() {
 
 
 function render() {
-	//game.debug.body(hitbox1);
-	//game.debug.spriteInfo(hitbox1);
+	game.debug.body(hitbox1);
+	game.debug.spriteInfo(hitbox1);
 }

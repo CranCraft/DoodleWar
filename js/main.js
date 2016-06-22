@@ -753,14 +753,20 @@ function checkOverlap() {
 
 	var check1 = false;
 	var check2 = false;
+	var check3 = false;
+	var check4 = false;
 	var boundsB1 = hitboxes1.getBounds();
 	var boundsB2 = hitboxes2.getBounds();
+	var boundsB3 = line1.getBounds();
+	var boundsB4 = line2.getBounds();
 	for (var i = 0,
 	    len = walls.children.length; i < len; i++) {
 		var boundsA = walls.children[i].getBounds();
 		check1 = Phaser.Rectangle.intersects(boundsA, boundsB1);
 		check2 = Phaser.Rectangle.intersects(boundsA, boundsB2);
-		if (check1 == true || check2 == true) {
+		check3 = Phaser.Rectangle.intersects(boundsA, boundsB3);
+		check4 = Phaser.Rectangle.intersects(boundsA, boundsB4);
+		if (check1 == true || check2 == true || check3 == true || check4 == true) {
 			//Wenn eine Mauer bereits dort steht
 			return false;
 		}

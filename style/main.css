@@ -1,14 +1,65 @@
+@import url(https://fonts.googleapis.com/css?family=Architects+Daughter);
+
+html {
+	background: url(../img/bg.jpg) no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+
+body {
+	background-color: transparent;
+	font-family: 'Architects Daughter', cursive; !important
+}
+
+a {
+	color: #000000;
+}
+
+a:hover {
+	color: #000066;
+	text-decoration: none;
+}
+
 #header {
 	height: 100px;
 	margin-bottom: 60px;
 	margin-top: 20px;
 }
 
+#header .well {
+	background: rgb(245, 245, 245);
+	background: rgba(245, 245, 245, .5);
+	border: none;
+	-webkit-box-shadow: 10px 10px 55px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: 10px 10px 55px 0px rgba(0,0,0,0.75);
+	box-shadow: 10px 10px 55px 0px rgba(0,0,0,0.75);
+}
+
+#mainContent {
+	background: rgb(245, 245, 245);
+	background: rgba(245, 245, 245, .5);
+	height: 100%;
+	-webkit-box-shadow: 10px 10px 55px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: 10px 10px 55px 0px rgba(0,0,0,0.75);
+	box-shadow: 10px 10px 55px 0px rgba(0,0,0,0.75);
+}
 #phaser-game {
+	margin-top: 50px;
+	margin-bottom: 50px;
 }
 
 #phaser-game canvas {
 	margin: 0 auto;
 }
 
+#imgContainer {
+	margin-top: 30px;
+}
+
+#buttonContainer {
+	margin-top: 50px;
+	margin-bottom: 50px;
+}
 

@@ -49,6 +49,7 @@ function preload() {
 	game.load.audio('soundboxgothit', 'assets/SoundEffects/dropbox.wav');
 	game.load.audio('soundbackground', 'assets/SoundEffects/background_sound.wav');
 	game.load.audio('soundwingame', 'assets/SoundEffects/win_game.wav');
+	game.load.audio('soundwallgothit', 'assets/SoundEffects/wallgothit.wav');
 }
 
 // Typlose Variabeln für die gesamte Laufzeit
@@ -375,9 +376,11 @@ function create() {
 	soundboxgothit = game.add.audio('soundboxgothit');
 	soundbackground = game.add.audio('soundbackground');
 	soundwingame = game.add.audio('soundwingame');
-
+	soundwallgothit = game.add.audio('soundwallgothit');
+	
 	soundbackground.play();
-	soundbackground.volume = 0.04;
+	soundbackground.volume = 0.03;
+	
 }
 
 // Hier ist alles drinne was durchgehend geprüft werden muss
@@ -549,6 +552,7 @@ function dropBox() {
 
 // lässt die Mauer schwächer werden, hält nur drei Schuss aus
 function wallGotHit(bullet, wall) {
+	soundwallgothit.play();
 	if (wall.type == 2) {
 		wall.type = 1;
 		wall = game.add.sprite('wall2');

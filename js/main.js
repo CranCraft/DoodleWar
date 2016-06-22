@@ -45,6 +45,10 @@ function preload() {
 	//Sounds
 	game.load.audio('shotPlayerOne', 'assets/SoundEffects/shot_player1.mp3');
 	game.load.audio('shotPlayerTwo', 'assets/SoundEffects/shot_player2.mp3');
+	game.load.audio('soundplayergothit', 'assets/SoundEffects/playgothit.wav');
+	game.load.audio('soundboxgothit', 'assets/SoundEffects/dropbox.wav');
+	game.load.audio('soundbackground', 'assets/SoundEffects/background_sound.wav');
+	game.load.audio('soundwingame', 'assets/SoundEffects/win_game.wav');
 }
 
 // Typlose Variabeln für die gesamte Laufzeit
@@ -267,7 +271,7 @@ function create() {
 
 	// Setzt die Bilder für das Leben nebeneinander
 	for (var i = 0; i < 3; i++) {
-		var player1Lives = livesPlayer1.create(18 + (30 * i), 26, 'heart');
+		var player1Lives = livesPlayer1.create(80 - (30 * i), 26, 'heart');
 		player1Lives.anchor.setTo(0.5, 0.5);
 	}
 
@@ -367,7 +371,13 @@ function create() {
 	//Sounds
 	shotPlayerOne = game.add.audio('shotPlayerOne');
 	shotPlayerTwo = game.add.audio('shotPlayerTwo');
+	soundplayergothit = game.add.audio('soundplayergothit');
+	soundboxgothit = game.add.audio('soundboxgothit');
+	soundbackground = game.add.audio('soundbackground');
+	soundwingame = game.add.audio('soundwingame');
 
+	soundbackground.play();
+	soundbackground.volume = 0.04;
 }
 
 // Hier ist alles drinne was durchgehend geprüft werden muss
@@ -534,7 +544,6 @@ function dropBox() {
 		// Variable für die Geschwindigkeit in der die Box herunterfällt
 		var randomNumber = game.rnd.integerInRange(2, 6);
 		boxesTime = game.time.now + randomNumber * boxesVelocity;
-
 	}
 }
 
@@ -589,11 +598,15 @@ function boxGotHit(bullet, box) {
 
 	// Entfernt die Box die getroffen wurde
 	box.kill();
+	
+	//Sound für die Box got Hit
+	soundboxgothit.play();
 }
 
 // Verhalten wenn Spieler 1 von einer Kugel getroffen wird
 function player1gotHit(player, bullet) {
 
+	soundplayergothit.play();
 	// Entfernt die Kugel die den Spieler 1 getroffen hat
 	bullet.kill();
 
@@ -607,12 +620,16 @@ function player1gotHit(player, bullet) {
 
 	// Wenn keine Leben mehr => Spieler verliert
 	if (livesPlayer1.countLiving() < 1) {
-
+		
+		soundbackground.stop();
+		soundwingame.play();
+		
 		// Entfernt die Spielfigur des Spielers 1
 		player1.kill();
-
+		player2.visible = false;
+		
 		// Entfernt alle Kugeln von Spielern 1
-		bulletsPlayer1.destroy();
+		bulletsPlayer1.callAll('kill');
 
 		// Setzt den Text visible
 		stateText.text = "Spieler 2 Gewinnt \n Klick für Neustart";
@@ -628,6 +645,8 @@ function player1gotHit(player, bullet) {
 // Verhalten wenn Spieler 2 von einer Kugel getroffen wird
 function player2gotHit(player, bullet) {
 
+	soundplayergothit.play();
+	
 	bullet.kill();
 
 	live = livesPlayer2.getFirstAlive();
@@ -638,15 +657,20 @@ function player2gotHit(player, bullet) {
 
 	// When the player dies
 	if (livesPlayer2.countLiving() < 1) {
+		
+		soundbackground.stop();
+		soundwingame.play();
+		
 		player2.kill();
-		bulletsPlayer2.destroy();
+		bulletsPlayer2.callAll('kill');
+		player1.visible = false;
 
 		stateText.text = "Spieler 1 Gewinnt \n Klick für Neustart";
 		stateText.visible = true;
 		gameOn = 1;
 
 		// the "click to restart" handler
-		game.input.onTap.addOnce(restart, this);
+		game.input.onTap.addOnce(restart);
 	}
 
 }
@@ -826,9 +850,11 @@ function dropWall(player) {
 // Wenn spiel neu gestartet wird
 function restart() {
 
+	soundbackground.play();
+	
 	// A new level starts
 	gameOn = 0;
-
+	
 	// resets the life count
 	livesPlayer1.callAll('revive');
 	livesPlayer2.callAll('revive');

@@ -354,9 +354,10 @@ function create() {
 
 
 	// Text nach Sieg eines Spielers und Anleitung für Restart
-	stateText = game.add.text(game.world.centerX, game.world.centerY, ' ', {
+	stateText = game.add.text(game.world.centerX, game.world.centerY, '', {
 		font : '84px Arial',
-		fill : '#fff'
+		fill : '#fff',
+		backgroundColor: 'rgba(0,0,0,0.3)'
 	});
 	stateText.anchor.setTo(0.5, 0.5);
 	stateText.visible = false;
@@ -378,8 +379,7 @@ function create() {
 	soundwingame = game.add.audio('soundwingame');
 	soundwallgothit = game.add.audio('soundwallgothit');
 	
-	soundbackground.play();
-	soundbackground.volume = 0.03;
+	soundbackground.loopFull(0.03);
 	
 }
 
@@ -854,7 +854,7 @@ function dropWall(player) {
 // Wenn spiel neu gestartet wird
 function restart() {
 
-	soundbackground.play();
+	soundbackground.loopFull(0.03);
 	
 	// A new level starts
 	gameOn = 0;

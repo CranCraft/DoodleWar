@@ -395,7 +395,6 @@ function update() {
 	if (gameOn == 0) {
 		if (fireButton1.isDown && !fireButtonCheckPlayer1) {
 			fireButtonCheckPlayer1 = true;
-			getOneWall(player1);
 			fireBulletPlayer1();
 		}
 
@@ -870,6 +869,6 @@ function restart() {
 
 
 function render() {
-	game.debug.body(hitbox1);
-	game.debug.spriteInfo(hitbox1);
+	//game.debug.body(hitbox1);
+	//game.debug.spriteInfo(hitbox1);
 }

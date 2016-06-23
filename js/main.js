@@ -1,4 +1,4 @@
-// Erstellt ein neues Fenster mit gegeben Parametern und weist es der Variabel Game zu
+//Erstellt ein neues Fenster mit gegebenen Parametern und weist es der Variabel Game zu
 var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-game', {
 	preload : preload,
 	create : create,
@@ -6,8 +6,7 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-game', {
 	render : render
 });
 
-// Hier werden die Bilder mit entsprechenden Variabeln geladen und wenn
-// angegeben mit größen
+//Hier werden die Bilder mit entsprechenden Variabeln geladen und wenn angegeben mit Größen
 function preload() {
 
 	//Bilder
@@ -52,29 +51,27 @@ function preload() {
 	game.load.audio('soundwallgothit', 'assets/SoundEffects/wallgothit.wav');
 }
 
-// Typlose Variabeln für die gesamte Laufzeit
+//Typlose Variabeln für die gesamte Laufzeit
 
-// Begrezungslinien für Spieler (Linie1 = Links, Linie2 = Rechts)
+//Begrezungslinien für Spieler (Linie1 = Links, Linie2 = Rechts)
 var line1;
 var line2;
 
-// Unsichtbare Mauer oben für die Lebensanzeige und das graue Feld dahinter
+//Unsichtbare Mauer oben für die Lebensanzeige und das graue Feld dahinter
 var invisWall;
 var invisField;
 
-// Beide Spieler (Spieler 1 = Links, Spieler 2 = Rechts)
+//Beide Spieler (Spieler 1 = Links, Spieler 2 = Rechts)
 var player1;
 var player2;
 
-// HitBox der Spieler
+//HitBox der Spieler
 var hitbox1;
 
-// Für die Zuweisung des Inputs der Pfeiltasten für Spieler 2
+//Für die Zuweisung des Inputs der Pfeiltasten für Spieler 2
 var cursors;
 
-// Schießen Variablen (bullets für die Kollisonsbrechnung, bulletTime = wie oft
-// die Kästen runterfallen,
-// fireButton für die auswahl des Schießenbuttons)
+//Schießen Variablen (bullets für die Kollisonsbrechnung, fireButton für die Auswahl des Schießenbuttons)
 var bullets;
 var bulletTime = 0;
 var bulletTime2 = 0;
@@ -84,7 +81,8 @@ var fireButtonCheckPlayer2 = false;
 var bulletVelocity1 = 500;
 var bulletVelocity2 = 500;
 
-// Spiel läuft = 0, Spiel beendet 1;
+
+//Spiel läuft = 0, Spiel beendet 1;
 var gameOn = 0;
 
 // powerUps
@@ -120,17 +118,15 @@ var fasterNotification1;
     var noWallNotification2;
     var newWallNotification2;
 
-// Folgende Funktion wird zu beginn einmal ausgeführt und ersellt alle Objekte
-// für ein Spiel inklusive Spieler, Leben usw.
+//Folgende Funktion wird zu Beginn einmal ausgeführt und erstellt alle Objekte für ein Spiel inklusive Spieler, Leben usw.
 function create() {
-	// Fügt einen Hintergrund an der Position an der Stelle links oben ein
-	// (0,0), das Bild welches verwendet wird hat die Variabel sky
+
+	//Fügt einen Hintergrund an der Position links oben ein (0,0); Das Bild welches verwendet wird hat die Variabel sky
 	game.add.sprite(0, 0, 'sky');
 
-	// An dieser Stelle erzeugen wir die beiden Wände die beide Spieler
-	// separieren. Dazu wird die gesamte Spielbreite durch
-	// 3 geteilt. Linie 1 wird an Stelle der (Spielbreite : 3) angelegt die
-	// linie 2 (Spielbreite : 3 * 2). Die Grafik heißt ground
+	//An dieser Stelle erzeugen wir die beiden Wände, die beide Spieler separieren. Dazu wird die gesamte Spielbreite durch
+	//3 geteilt. Linie 1 wird an Stelle der (Spielbreite : 3) angelegt, die Linie 2 (Spielbreite : 3 * 2). Die Grafik heißt ground
+
 	line1 = game.add.sprite(game.world.width / 3, 0, 'lines');
 	line2 = game.add.sprite(2 * game.world.width / 3, 0, 'lines');
 	line1.alpha = 0;
@@ -148,44 +144,32 @@ function create() {
 	invisField.scale.setTo(800, 100);
 	invisField.alpha = 0.2;
 
-	// Für die beiden Linienobjekte wird die Pysic angestellt damit eine
-	// Kollisionsbrechenung stattfinden kann
+	//Für die beiden Linienobjekte wird die Physics angestellt, damit eine Kollisionsberechnung stattfinden kann
 	game.physics.enable(line1, Phaser.Physics.ARCADE);
 	game.physics.enable(line2, Phaser.Physics.ARCADE);
 
-	// Setzt die linien fest so das sie nicht mehr verschoben werden können
+	//Setzt die linien fest so das sie nicht mehr verschoben werden können
 	game.physics.arcade.enable(line1);
 	line1.body.immovable = true;
 
 	game.physics.arcade.enable(line2);
 	line2.body.immovable = true;
 
-	// Startposition für die Spieler , und assets (Bilder für Bewegung...)
-	// gesetzt
+	//Startposition für die Spieler und assets (Bilder für Bewegung...) gesetzt
 	player1 = game.add.group();
 	player1 = game.add.sprite(32, game.world.height - 150, 'dude');
 	player2 = game.add.sprite(game.world.width - 64, game.world.height - 150, 'dude2');
-
-	// Animationen für nach links, rechts gehen
+	
+	//Animationen für nach links, rechts gehen
 	player1.animations.add('walk1', [0, 1, 2], 3, true);
-	//player1.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
 
 	player2.animations.add('walk2', [2, 1, 0], 3, true);
-	//player2.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
 
-	/*
-	* player1.animations.add('left', [ 0, 1, 2, 3 ], 10, true);
-	* player1.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
-	*
-	* player2.animations.add('left', [ 0, 1, 2, 3 ], 10, true);
-	* player2.animations.add('right', [ 5, 6, 7, 8 ], 10, true);
-	*/
-
-	// Stellt die Phsic beider Spieler ein, z.B. für Kollisionsberechnung
+	//Stellt die Physics beider Spieler ein, z.B. für Kollisionsberechnung
 	game.physics.arcade.enable(player1);
 	game.physics.arcade.enable(player2);
 
-	// Verhinder das Spieler aus dem Feld rausgehen können
+	//Verhindert, dass Spieler aus dem Feld rausgehen können
 	player1.body.collideWorldBounds = true;
 	player2.body.collideWorldBounds = true;
 
@@ -207,27 +191,27 @@ function create() {
 	hitbox2.enablebody = true;	
 	hitbox2.body.velocity.x = 0;
 	hitbox2.alpha = 0;
-
-	// Steuerung des Spielers 2 mithilfe der Pfeiltasten
+	
+	//Steuerung des Spielers 2 mithilfe der Pfeiltasten
 	cursors = game.input.keyboard.createCursorKeys();
 
-	// Steuerung des Spielers 1 mithilfe WASD Tasten
+	//Steuerung des Spielers 1 mithilfe WASD Tasten
 	wupKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
 	sdownKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
 	aleftKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
 	drightKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
 
-	// Schießebutton für Spieler 1 (leertaste)
+	//Schießbutton für Spieler 1 (Leertaste)
 	fireButton1 = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-	// Schießebutton für Spieler 2 (leertaste)
+	//Schießbutton für Spieler 2 (Enter)
 	fireButton2 = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 
-	// Schießebutton für Spieler 1 (leertaste)
+	//Mauer ablegen für Spieler 1 (Q)
 	dropWall1 = game.input.keyboard.addKey(Phaser.Keyboard.Q);
-	// Schießebutton für Spieler 2 (leertaste)
+	//Mauer ablegen für Spieler 2 (L)
 	dropWall2 = game.input.keyboard.addKey(Phaser.Keyboard.L);
-
-	// Die Kugel-Variablen für Spieler1
+	
+	//Die Kugel-Variablen für Spieler 1
 	bulletsPlayer1 = game.add.group();
 	bulletsPlayer1.enableBody = true;
 	bulletsPlayer1.physicsBodyType = Phaser.Physics.ARCADE;
@@ -237,7 +221,7 @@ function create() {
 	bulletsPlayer1.setAll('outOfBoundsKill', true);
 	bulletsPlayer1.setAll('checkWorldBounds', true);
 
-	// Die Kugel-Variablen für Spieler2
+	//Die Kugel-Variablen für Spieler 2
 	bulletsPlayer2 = game.add.group();
 	bulletsPlayer2.enableBody = true;
 	bulletsPlayer2.physicsBodyType = Phaser.Physics.ARCADE;
@@ -247,7 +231,7 @@ function create() {
 	bulletsPlayer2.setAll('outOfBoundsKill', true);
 	bulletsPlayer2.setAll('checkWorldBounds', true);
 
-	// Power Up Box
+	//Power Up Box
 	boxes = game.add.group();
 	boxes.enableBody = true;
 	boxes.physicsBodyType = Phaser.Physics.ARCADE;
@@ -270,7 +254,7 @@ function create() {
 	// Leben für Spieler 1
 	livesPlayer1 = game.add.group();
 
-	// Setzt die Bilder für das Leben nebeneinander
+	//Setzt die Bilder für das Leben nebeneinander
 	for (var i = 0; i < 3; i++) {
 		var player1Lives = livesPlayer1.create(80 - (30 * i), 26, 'heart');
 		player1Lives.anchor.setTo(0.5, 0.5);
@@ -353,7 +337,7 @@ function create() {
 	wallDisplayArray[11].visible = true;
 
 
-	// Text nach Sieg eines Spielers und Anleitung für Restart
+	//Text nach Sieg eines Spielers und Anleitung für Restart
 	stateText = game.add.text(game.world.centerX, game.world.centerY, '', {
 		font : '84px Arial',
 		fill : '#fff',
@@ -777,12 +761,11 @@ function setFaster2NotificationVisibilityFalse(){
     fasterNotification2.visible = false;
 }
 
+// Funktion zum Überprüfen ob an der Stelle wo eine Mauer gesetzt werden soll ob bereits eine vorhanden ist.
 function checkOverlap() {
 
 	var check1 = false;
 	var check2 = false;
-	var check3 = false;
-	var check4 = false;
 	var boundsB1 = hitboxes1.getBounds();
 	var boundsB2 = hitboxes2.getBounds();
 	for (var i = 0,
